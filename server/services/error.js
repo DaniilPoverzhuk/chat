@@ -1,8 +1,7 @@
-import { validationResult } from "express-validator";
+const { validationResult } = require("express-validator");
+const ApiError = require("../error/errorHandler.js");
 
-import ApiError from "../error/errorHandler.js";
-
-export const checkError = (req) => {
+exports.checkError = (req) => {
   const result = validationResult(req);
 
   if (!result.isEmpty()) {

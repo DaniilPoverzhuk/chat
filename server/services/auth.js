@@ -1,27 +1,43 @@
-import bcrypt from "bcrypt";
+const bcrypt = require("bcrypt");
 
-import { user, Sequelize } from "../models";
-import ApiErorr from "../error/errorHandler.js";
-
-console.log(user);
+const Models = require("../models/index.js");
+const ApiError = require("../error/errorHandler.js");
 
 class AuthService {
-  async login() {}
+  async login({ username, email, password, avatar }) {
+    const candidate = await Models.User.find({ where: email });
+
+    if (!candidate) {
+      throw new ApiError().BadRequest("Такой пользователь не зарегестрирован");
+    }
+
+    const isValidPassword = bcrypt.compare(password, candidate.password);
+
+    if (!isValidPassword) {
+      throw new ApiError().BadRequest("Неверный логин или пароль");
+    }
+
+    return candidate;
+  }
 
   async registration({ username, email, password }) {
-    // const candiate = await Models.User.find({ where: email });
-    // if (candiate) {
-    //   throw new ApiErorr().BadRequest("Такой пользователь уже зарегестрирован");
-    // }
-    // const salt = bcrypt.genSaltSync(saltRounds);
-    // const passwordHash = bcrypt.hashSync(password, salt);
-    // console.log(passwordHash);
-    // const user = await Models.User.create({
-    //   username,
-    //   password,
-    //   email,
-    // });
+    const candidate = await Models.User.find({ where: email });
+
+    if (candidate) {
+      throw new ApiError().BadRequest("Такой пользователь уже зарегестрирован");
+    }
+
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const passwordHash = bcrypt.hashSync(password, salt);
+
+    const user = await Models.User.create({
+      username,
+      password: passwordHash,
+      email,
+    });
+
+    return user;
   }
 }
 
-export default new AuthService();
+module.exports = new AuthService();

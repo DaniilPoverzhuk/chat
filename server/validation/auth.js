@@ -1,14 +1,25 @@
-import { body } from "express-validator";
+const { body } = require("express-validator");
 
-export const login = () => [
+exports.login = () => [
   body("email").isEmail().withMessage("Невалидная почта"),
-  body("username").isString().exists(),
-  body("password").isString().exists(),
+  body("password")
+    .isString()
+    .withMessage("Неверный тип данных, должна быть строка")
+    .isLength({ min: 5 })
+    .withMessage("Пароль должен состоять минимум из 5 символов"),
 ];
 
-export const registration = () => [
+exports.registration = () => [
   body("email").isEmail().withMessage("Невалидная почта"),
-  body("username").isString().withMessage("Обязательное поле"),
-  // body("password").isString().exists().isLength({ min: 5 }),
-  // body("avatar").optional().isURL().withMessage("Невалидный URL"),
+  body("username")
+    .isString()
+    .withMessage("Неверный тип данных, должна быть строка")
+    .isLength({ min: 3 })
+    .withMessage("Имя должно состоять минимум из 3 символов"),
+  body("password")
+    .isString()
+    .withMessage("Неверный тип данных, должна быть строка")
+    .isLength({ min: 5 })
+    .withMessage("Пароль должен состоять минимум из 5 символов"),
+  body("avatar").optional().isURL().withMessage("Невалидный URL"),
 ];

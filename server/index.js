@@ -1,10 +1,11 @@
-import express from "express";
-import dotenv from "dotenv";
-import bodyParser from "body-parser";
+const express = require("express");
+const dotenv = require("dotenv");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 
-import AuthController from "./controllers/auth.js";
-import errorMiddleware from "./middlewares/error.js";
-import * as AuthValidation from "./validation/auth.js";
+const AuthController = require("./controllers/auth.js");
+const errorMiddleware = require("./middlewares/error.js");
+const AuthValidation = require("./validation/auth.js");
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use(
     extended: true,
   })
 );
+app.use(cookieParser(process.env.COOKIE_SECRET_KEY));
 
 app.post("/registration", AuthValidation.registration(), AuthController.registration);
 
