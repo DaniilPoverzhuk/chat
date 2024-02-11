@@ -20,6 +20,7 @@ app.use(
 );
 app.use(cookieParser(process.env.COOKIE_SECRET_KEY));
 
+app.post("/login", AuthValidation.login(), AuthController.login);
 app.post("/registration", AuthValidation.registration(), AuthController.registration);
 
 app.use(errorMiddleware);
