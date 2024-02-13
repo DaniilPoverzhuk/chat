@@ -11,4 +11,5 @@ export interface IUser extends ID {
   updatedAt: string;
   refreshToken: string;
   accessToken: string;
+  isOnline: boolean;
 }

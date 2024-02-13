@@ -1,0 +1,21 @@
+.image {
+  position: relative;
+
+  span {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    width: 14.5px;
+    height: 14.5px;
+
+    border-radius: 100%;
+
+    transition: 0.4s;
+
+    &.active {
+      border: 2px solid #fff;
+      background-color: #4bb34b;
+    }
+  }
+}

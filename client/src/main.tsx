@@ -6,6 +6,10 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ROUTES } from "./routes";
 
 import "@/styles/globals.scss";
+import "@fontsource/roboto/300.css";
+import "@fontsource/roboto/400.css";
+import "@fontsource/roboto/500.css";
+import "@fontsource/roboto/700.css";
 
 import NotFound from "@/pages/not-found";
 import Login from "@/pages/login";

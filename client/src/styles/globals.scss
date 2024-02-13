@@ -13,3 +13,23 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+#root {
+  width: 100%;
+}
+
+.global-scrollbar {
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 80px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #1976d2;
+    border-radius: 80px;
+  }
+}
