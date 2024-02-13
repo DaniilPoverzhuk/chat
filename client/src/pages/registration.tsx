@@ -69,7 +69,7 @@ const fields: IField[] = [
   },
 ];
 
-const Login: React.FC = () => {
+const Registration: React.FC = () => {
   const {
     register,
     handleSubmit,
@@ -104,7 +104,7 @@ const Login: React.FC = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Grid container direction={"column"} alignItems={"flex-start"} gap={2}>
-        <List<IField>
+        <List
           list={fields}
           renderItem={(field) => (
             <TextField
@@ -135,4 +135,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default Registration;
