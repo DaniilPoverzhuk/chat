@@ -12,7 +12,6 @@ import * as AuthService from "@/service/auth";
 
 import { setData } from "@/lib/store/slices/user";
 
-import styles from "./index.module.scss";
 import "react-toastify/dist/ReactToastify.css";
 
 import { ROUTES } from "@/routes";
@@ -103,7 +102,7 @@ const Login: React.FC = () => {
   }, []);
 
   return (
-    <form className={styles.root} onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Grid container direction={"column"} alignItems={"flex-start"} gap={2}>
         <List<IField>
           list={fields}
