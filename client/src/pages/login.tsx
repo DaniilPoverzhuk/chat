@@ -8,13 +8,17 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Grid, Link, TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 
+import * as AuthService from "@/service/auth";
+
+import { setData } from "@/lib/store/slices/user";
+
 import styles from "./index.module.scss";
 import "react-toastify/dist/ReactToastify.css";
 
 import { ROUTES } from "@/routes";
+import { useAppDispatch } from "@/lib/store";
 
 const formSchema = z.object({
-  username: z.string().min(1, { message: "Имя пользователя слишком короткое" }),
   email: z.string().email("Некорректный email"),
   password: z.string().min(1, { message: "Введите пароль" }),
 });
@@ -29,32 +33,33 @@ const Login: React.FC = () => {
     formState: { errors },
   } = useForm<FormSchema>({ resolver: zodResolver(formSchema) });
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [isLoading, setLoading] = useState<boolean>(false);
 
-  const onSubmit = (data: any) => {
-    setLoading(true);
-    toast.success("Авторизация прошла успешно!");
+  const onSubmit = async (formData: FormSchema) => {
+    try {
+      const { data } = await AuthService.login(formData);
 
-    setTimeout(() => {
-      navigate(ROUTES.HOME);
-    }, 2000);
+      dispatch(setData(data.user));
+
+      setLoading(true);
+      toast.success("Авторизация прошла успешно!");
+
+      setTimeout(() => {
+        navigate(ROUTES.HOME);
+      }, 2000);
+    } catch (err) {
+      toast.error("При аутентификации произошла ошибка :(");
+    }
   };
 
   useEffect(() => {
-    setFocus("username");
+    setFocus("email");
   }, []);
 
   return (
     <form className={styles.root} onSubmit={handleSubmit(onSubmit)}>
       <Grid container direction={"column"} alignItems={"flex-start"} gap={2}>
-        <TextField
-          {...register("username")}
-          label="Имя пользователя"
-          variant="outlined"
-          size="small"
-          error={Boolean(errors.username!)}
-          helperText={Boolean(errors.email!) && errors.username?.message}
-        />
         <TextField
           {...register("email")}
           label="Электронная почта"

@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 
 const AuthController = require("./controllers/auth.js");
 const errorMiddleware = require("./middlewares/error.js");
@@ -19,6 +20,12 @@ app.use(
   })
 );
 app.use(cookieParser(process.env.COOKIE_SECRET_KEY));
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  })
+);
 
 app.post("/login", AuthValidation.login(), AuthController.login);
 app.post("/registration", AuthValidation.registration(), AuthController.registration);
