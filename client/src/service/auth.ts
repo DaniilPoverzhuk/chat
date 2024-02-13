@@ -27,3 +27,23 @@ export const login = async (
 
   return response;
 };
+
+interface RegistrationProps {
+  email: string;
+  username: string;
+  password: string;
+}
+
+export const registration = async (
+  data: RegistrationProps
+): Promise<AxiosResponse<IUserDataResponse>> => {
+  const response = await axios<IUserDataResponse>({
+    method: "post",
+    url: "/registration",
+    data,
+  });
+
+  LocalStorage.set<string>(response.data.user.accessToken, "accessToken");
+
+  return response;
+};

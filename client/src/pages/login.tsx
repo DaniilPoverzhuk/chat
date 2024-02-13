@@ -4,22 +4,25 @@ import { z } from "zod";
 import { ToastContainer, toast } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { AxiosError } from "axios";
 
 import { Grid, Link, TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import * as AuthService from "@/service/auth";
 
+import { IError } from "@/axios/types";
+
 import { setData } from "@/lib/store/slices/user";
+import { useAppDispatch } from "@/lib/store";
 
 import "react-toastify/dist/ReactToastify.css";
 
 import { ROUTES } from "@/routes";
-import { useAppDispatch } from "@/lib/store";
 
 const formSchema = z.object({
   email: z.string().email("Некорректный email"),
-  password: z.string().min(1, { message: "Введите пароль" }),
+  password: z.string().min(1, "Введите пароль"),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -42,13 +45,14 @@ const Login: React.FC = () => {
       dispatch(setData(data.user));
 
       setLoading(true);
-      toast.success("Авторизация прошла успешно!");
+      toast.success("Аутентификация прошла успешно!");
 
       setTimeout(() => {
         navigate(ROUTES.HOME);
       }, 2000);
     } catch (err) {
-      toast.error("При аутентификации произошла ошибка :(");
+      const errorObject = err as AxiosError<IError>;
+      toast.error(errorObject.response?.data.message);
     }
   };
 
@@ -69,12 +73,12 @@ const Login: React.FC = () => {
         />
         <TextField
           {...register("password")}
-          type="password"
           label="Пароль"
           variant="outlined"
           size="small"
+          type="password"
           error={Boolean(errors.password!)}
-          helperText={Boolean(errors.email!) && errors.password?.message}
+          helperText={Boolean(errors.password!) && errors.password?.message}
         />
         <LoadingButton
           loading={isLoading}
