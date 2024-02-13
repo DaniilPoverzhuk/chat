@@ -105,6 +105,7 @@ const Registration: React.FC = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <Grid container direction={"column"} alignItems={"flex-start"} gap={2}>
         <List
+          flex={{ flexDirection: "column", gap: 15 }}
           list={fields}
           renderItem={(field) => (
             <TextField
