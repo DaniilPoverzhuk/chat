@@ -78,7 +78,7 @@ const ListUsers: React.FC = () => {
     <Box className={styles.root} height={"100%"}>
       <List>
         {users.map((user) => (
-          <User last_message="message" {...user} />
+          <User key={user.id} last_message="message" {...user} />
         ))}
       </List>
     </Box>

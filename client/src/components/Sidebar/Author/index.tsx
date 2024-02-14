@@ -16,18 +16,20 @@ const Author: React.FC = () => {
             style={{ width: "100%" }}
           />
         </Grid>
-        <Grid item xs={9} display={"flex"} direction={"column"} marginTop={1}>
-          <Typography component={"p"} fontWeight={500}>
-            {data.username}
-          </Typography>
-          <Typography
-            component={"p"}
-            fontSize={"12px"}
-            color={"#797979"}
-            fontStyle={"italic"}
-          >
-            {data.email}
-          </Typography>
+        <Grid item xs={9} display={"flex"} marginTop={1}>
+          <Box flexDirection={"column"}>
+            <Typography component={"p"} fontWeight={500}>
+              {data.username}
+            </Typography>
+            <Typography
+              component={"p"}
+              fontSize={"12px"}
+              color={"#797979"}
+              fontStyle={"italic"}
+            >
+              {data.email}
+            </Typography>
+          </Box>
         </Grid>
       </Grid>
     </Box>

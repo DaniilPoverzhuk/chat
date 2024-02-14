@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 
-import { Grid, Link, TextField } from "@mui/material";
+import { Container, Grid, Link, TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import * as AuthService from "@/service/auth";
@@ -61,38 +61,44 @@ const Login: React.FC = () => {
   }, []);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Grid container direction={"column"} alignItems={"flex-start"} gap={2}>
-        <TextField
-          {...register("email")}
-          label="Электронная почта"
-          variant="outlined"
-          size="small"
-          error={Boolean(errors.email!)}
-          helperText={Boolean(errors.email!) && errors.email?.message}
-        />
-        <TextField
-          {...register("password")}
-          label="Пароль"
-          variant="outlined"
-          size="small"
-          type="password"
-          error={Boolean(errors.password!)}
-          helperText={Boolean(errors.password!) && errors.password?.message}
-        />
-        <LoadingButton
-          loading={isLoading}
-          variant="contained"
-          onClick={handleSubmit(onSubmit)}
-        >
-          Войти
-        </LoadingButton>
-        <Link component={RouterLink} to={ROUTES.REGISTRATION}>
-          Зарегестрироваться
-        </Link>
-      </Grid>
-      <ToastContainer />
-    </form>
+    <Container maxWidth="xs">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Grid container direction={"column"} alignItems={"flex-start"} gap={2}>
+          <TextField
+            {...register("email")}
+            label="Электронная почта"
+            variant="outlined"
+            size="small"
+            error={Boolean(errors.email!)}
+            helperText={Boolean(errors.email!) && errors.email?.message}
+            fullWidth
+          />
+          <TextField
+            {...register("password")}
+            label="Пароль"
+            variant="outlined"
+            size="small"
+            type="password"
+            error={Boolean(errors.password!)}
+            helperText={Boolean(errors.password!) && errors.password?.message}
+            fullWidth
+          />
+          <LoadingButton
+            loading={isLoading}
+            variant="contained"
+            onClick={handleSubmit(onSubmit)}
+            fullWidth
+            sx={{ maxWidth: "200px" }}
+          >
+            Войти
+          </LoadingButton>
+          <Link component={RouterLink} to={ROUTES.REGISTRATION}>
+            Зарегестрироваться
+          </Link>
+        </Grid>
+        <ToastContainer />
+      </form>
+    </Container>
   );
 };
 

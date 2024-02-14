@@ -24,6 +24,7 @@ export const login = async (
   });
 
   LocalStorage.set<string>(response.data.user.accessToken, "accessToken");
+  LocalStorage.set<IUser>(response.data.user, "user");
 
   return response;
 };
@@ -44,6 +45,7 @@ export const registration = async (
   });
 
   LocalStorage.set<string>(response.data.user.accessToken, "accessToken");
+  LocalStorage.set<IUser>(response.data.user, "user");
 
   return response;
 };
