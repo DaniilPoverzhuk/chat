@@ -23,3 +23,5 @@ exports.registration = () => [
     .withMessage("Пароль должен состоять минимум из 5 символов"),
   body("avatar").optional().isURL().withMessage("Невалидный URL"),
 ];
+
+exports.me = () => [body("email").isEmail().withMessage("Невалидная почта")];

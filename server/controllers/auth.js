@@ -2,13 +2,33 @@ const ErrorService = require("../services/error.js");
 const AuthService = require("../services/auth.js");
 const TokenService = require("../services/token.js");
 const userDto = require("../dto/user.js");
+const Models = require("../models/index.js");
+const ApiError = require("../error/errorHandler.js");
 
 class AuthController {
-  async login(req, res, next) {
+  async getMe(req, res, next) {
     try {
       ErrorService.checkError(req);
 
-      console.log(req.body);
+      const { email } = req.body;
+      const user = await Models.User.findOne({ where: { email } });
+
+      if (!user) {
+        throw new ApiError().UnauthorizedError();
+      }
+
+      return res.status(200).json({
+        message: "User was successfully received",
+        user,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async login(req, res, next) {
+    try {
+      ErrorService.checkError(req);
 
       const user = userDto(await AuthService.login(req.body));
       const tokens = await TokenService.generateTokens(user);

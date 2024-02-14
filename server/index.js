@@ -32,8 +32,9 @@ app.use(
   })
 );
 
-app.post("/login", AuthValidation.login(), AuthController.login);
-app.post("/registration", AuthValidation.registration(), AuthController.registration);
+app.post("/auth/login", AuthValidation.login(), AuthController.login);
+app.post("/auth/registration", AuthValidation.registration(), AuthController.registration);
+app.get("/auth/me", AuthValidation.me(), AuthController.getMe);
 
 app.get("/users", authMiddleware, UserController.getAll);
 
