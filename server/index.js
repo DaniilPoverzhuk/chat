@@ -5,8 +5,13 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
 const AuthController = require("./controllers/auth.js");
-const errorMiddleware = require("./middlewares/error.js");
+const UserController = require("./controllers/user.js");
+const TokenController = require("./controllers/token.js");
+
 const AuthValidation = require("./validation/auth.js");
+
+const errorMiddleware = require("./middlewares/error.js");
+const authMiddleware = require("./middlewares/auth.js");
 
 dotenv.config();
 
@@ -29,6 +34,10 @@ app.use(
 
 app.post("/login", AuthValidation.login(), AuthController.login);
 app.post("/registration", AuthValidation.registration(), AuthController.registration);
+
+app.get("/users", authMiddleware, UserController.getAll);
+
+app.get("/update-tokens", TokenController.updateToken);
 
 app.use(errorMiddleware);
 

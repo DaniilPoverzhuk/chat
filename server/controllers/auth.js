@@ -8,6 +8,8 @@ class AuthController {
     try {
       ErrorService.checkError(req);
 
+      console.log(req.body);
+
       const user = userDto(await AuthService.login(req.body));
       const tokens = await TokenService.generateTokens(user);
 
