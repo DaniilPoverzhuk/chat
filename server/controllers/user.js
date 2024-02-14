@@ -8,6 +8,8 @@ class UserController {
       ErrorService.checkError(req);
 
       const user = req.body;
+
+      console.log(user);
       const users = await Models.User.findAll({
         where: {
           email: {

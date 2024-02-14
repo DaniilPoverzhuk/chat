@@ -4,10 +4,10 @@ const Models = require("../models/index.js");
 class TokenService {
   async generateTokens(payload) {
     const refreshToken = jwt.sign(payload, process.env.SECRET_KEY_REFRESH_TOKEN, {
-      expiresIn: "30d",
+      expiresIn: "2m",
     });
     const accessToken = jwt.sign(payload, process.env.SECRET_KEY_ACCESS_TOKEN, {
-      expiresIn: "15m",
+      expiresIn: "1m",
     });
 
     return { refreshToken, accessToken };
@@ -30,10 +30,21 @@ class TokenService {
       const token = jwt.verify(accessToken, process.env.SECRET_KEY_ACCESS_TOKEN);
 
       return token;
-    } catch (error) {}
+    } catch (err) {
+      return null;
+    }
   }
 
-  isValidRefreshToken() {}
+  isValidRefreshToken(refreshToken) {
+    try {
+      const token = jwt.verify(refreshToken, process.env.SECRET_KEY_REFRESH_TOKEN);
+
+      return token;
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  }
 }
 
 module.exports = new TokenService();
