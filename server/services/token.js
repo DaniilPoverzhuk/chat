@@ -13,6 +13,13 @@ class TokenService {
     return { refreshToken, accessToken };
   }
 
+  getRefreshTokenFromCookie(string) {
+    return string
+      .split(" ")
+      .find((item) => item.split("=")[0] === "refreshToken")
+      .split("=")[1];
+  }
+
   async saveToken(userId, { refreshToken }) {
     const token = await Models.Token.findOne({ where: { userId } });
 
@@ -41,7 +48,6 @@ class TokenService {
 
       return token;
     } catch (err) {
-      console.log(err);
       return null;
     }
   }
