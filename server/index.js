@@ -38,7 +38,8 @@ app.get("/auth/me", AuthValidation.me(), AuthController.getMe);
 
 app.get("/users", authMiddleware, UserController.getAll);
 
-app.get("/update-tokens", TokenController.updateToken);
+app.get("/token/updapte", TokenController.update);
+app.get("/token/check", TokenController.check);
 
 app.use(errorMiddleware);
 
