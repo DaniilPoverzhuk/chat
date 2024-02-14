@@ -13,13 +13,6 @@ class TokenService {
     return { refreshToken, accessToken };
   }
 
-  getRefreshTokenFromCookie(string) {
-    return string
-      .split(" ")
-      .find((item) => item.split("=")[0] === "refreshToken")
-      .split("=")[1];
-  }
-
   async saveToken(userId, { refreshToken }) {
     const token = await Models.Token.findOne({ where: { userId } });
 
@@ -30,6 +23,13 @@ class TokenService {
     const newToken = await Models.Token.create({ userId, refreshToken });
 
     return newToken;
+  }
+
+  getRefreshTokenFromCookie(req) {
+    return req.headers.cookie
+      .split(" ")
+      .find((item) => item.split("=")[0] === "refreshToken")
+      .split("=")[1];
   }
 
   isValidAccessToken(accessToken) {

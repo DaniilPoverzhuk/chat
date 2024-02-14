@@ -4,7 +4,7 @@ const ApiError = require("../error/errorHandler.js");
 class TokenController {
   async update(req, res, next) {
     try {
-      const refreshToken = req.headers.cookie.split("=")[1];
+      const refreshToken = TokenService.getRefreshTokenFromCookie(req);
 
       const { exp, iat, ...user } = TokenService.isValidRefreshToken(refreshToken);
 
@@ -41,7 +41,7 @@ class TokenController {
       const isValidAccessToken = TokenService.isValidAccessToken(accessToken);
 
       if (!isValidAccessToken) {
-        const refreshToken = TokenService.getRefreshTokenFromCookie(req.headers.cookie);
+        const refreshToken = TokenService.getRefreshTokenFromCookie(req);
 
         if (!refreshToken) {
           throw new ApiError().UnauthorizedError();
@@ -58,15 +58,13 @@ class TokenController {
 
         await TokenService.saveToken(user.id, tokens);
 
-        res.cookie("refreshToken", tokens.refreshToken);
-
         return res.status(200).json({
           message: "Tokens have been updated",
           user: { ...user, ...tokens },
         });
       }
 
-      const refreshToken = TokenService.getRefreshTokenFromCookie(req.headers.cookie);
+      const refreshToken = TokenService.getRefreshTokenFromCookie(req);
       const user = { ...isValidAccessToken, accessToken, refreshToken };
 
       return res.status(200).json({
