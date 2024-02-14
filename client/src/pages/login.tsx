@@ -52,6 +52,7 @@ const Login: React.FC = () => {
       }, 2000);
     } catch (err) {
       const errorObject = err as AxiosError<IError>;
+
       toast.error(errorObject.response?.data.message);
     }
   };

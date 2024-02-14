@@ -1,5 +1,5 @@
-import axios from "@/axios";
-import { AxiosResponse } from "axios";
+import instance from "@/axios";
+import axios, { AxiosResponse } from "axios";
 
 import LocalStorage from "@/utils/localStorage";
 import { IUser } from "@/types";
@@ -17,9 +17,9 @@ interface IUserDataResponse {
 export const login = async (
   data: LoginProps
 ): Promise<AxiosResponse<IUserDataResponse>> => {
-  const response = await axios<IUserDataResponse>({
+  const response = await instance<IUserDataResponse>({
     method: "post",
-    url: "/login",
+    url: "/auth/login",
     data,
   });
 
@@ -38,10 +38,28 @@ interface RegistrationProps {
 export const registration = async (
   data: RegistrationProps
 ): Promise<AxiosResponse<IUserDataResponse>> => {
-  const response = await axios<IUserDataResponse>({
+  const response = await instance<IUserDataResponse>({
     method: "post",
-    url: "/registration",
+    url: "/auth/registration",
     data,
+  });
+
+  LocalStorage.set<string>(response.data.user.accessToken, "accessToken");
+  LocalStorage.set<IUser>(response.data.user, "user");
+
+  return response;
+};
+
+export const check = async (): Promise<AxiosResponse<IUserDataResponse>> => {
+  const headers = {
+    Authorization: `Bearer ${LocalStorage.get("accessToken")}`,
+  };
+
+  const response = await axios<IUserDataResponse>({
+    method: "get",
+    url: "http://localhost:5001/token/check",
+    headers,
+    withCredentials: true,
   });
 
   LocalStorage.set<string>(response.data.user.accessToken, "accessToken");

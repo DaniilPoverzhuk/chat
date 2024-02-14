@@ -122,8 +122,8 @@ const Login: React.FC = () => {
           >
             Войти
           </LoadingButton>
-          <Link component={RouterLink} to={ROUTES.REGISTRATION}>
-            Зарегестрироваться
+          <Link component={RouterLink} to={ROUTES.LOGIN}>
+            У меня уже есть аккаунт
           </Link>
         </Grid>
         <ToastContainer />
