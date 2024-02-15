@@ -1,0 +1,9 @@
+.avatar {
+  transition: 0.4s;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(0.975);
+    opacity: 0.75;
+  }
+}

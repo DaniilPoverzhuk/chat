@@ -12,6 +12,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  overflow: hidden;
 }
 
 #root {
@@ -32,4 +34,10 @@ body {
     background: #1976d2;
     border-radius: 80px;
   }
+}
+
+button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
 }

@@ -1,16 +1,28 @@
-import React from "react";
-import styles from "./index.module.scss";
+import React, { useEffect, useState } from "react";
 
 import ListUsers from "@/components/Sidebar/ListUsers";
 import Search from "@/components/Sidebar/Search";
 import Track from "@/components/Track";
 
+import * as UserService from "@/service/user";
+
 import { Box, Container, Grid } from "@mui/material";
 import Author from "@/components/Sidebar/Author";
+import { IUser } from "@/types";
 
 const Home: React.FC = () => {
+  const [users, setUsers] = useState<IUser[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const response = await UserService.getAll();
+
+      setUsers(response.data.users);
+    })();
+  }, []);
+
   return (
-    <Container className={styles.root} maxWidth="lg" sx={{ height: "100%" }}>
+    <Container maxWidth="lg" sx={{ height: "100%" }}>
       <Box
         boxShadow={"0px 0px 8px 0px rgba(34, 60, 80, 0.2)"}
         padding={"0"}
@@ -31,9 +43,9 @@ const Home: React.FC = () => {
               gap={1}
             >
               <Author />
-              <Search />
+              <Search users={users} />
             </Box>
-            <ListUsers />
+            <ListUsers users={users} />
           </Grid>
           <Grid item xs={8}>
             <Track />

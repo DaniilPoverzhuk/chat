@@ -1,5 +1,6 @@
 import isNumber from "@/utils/isNumber";
-import React from "react";
+import React, { useMemo } from "react";
+import ReactDOM from "react-dom/client";
 
 type TypeDirection = "row" | "column" | "row-reverse" | "column-reverse";
 
@@ -18,7 +19,13 @@ interface Props<Item> {
     alignItems?: TypeAlignItems;
     gap?: number;
   };
-  grid?: {};
+  grid?: {
+    gridTemplateColumns?: string;
+    gap?: number;
+    rowGap?: number;
+  };
+  component?: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 const List = <Item,>({ list, renderItem, flex, grid }: Props<Item>) => {
@@ -33,6 +40,7 @@ const List = <Item,>({ list, renderItem, flex, grid }: Props<Item>) => {
       return (styles.grid = { display: "grid", ...grid });
     }
   };
+
   return <ul style={getStyles()}>{list.map(renderItem)}</ul>;
 };
 
