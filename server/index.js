@@ -7,10 +7,10 @@ const cors = require("cors");
 const AuthController = require("./controllers/auth.js");
 const UserController = require("./controllers/user.js");
 const TokenController = require("./controllers/token.js");
-const RoomsController = require("./controllers/rooms.js");
+const RoomController = require("./controllers/room.js");
 
 const AuthValidation = require("./validation/auth.js");
-const ChatValidation = require("./validation/chat.js");
+const RoomValidation = require("./validation/room.js");
 
 const errorMiddleware = require("./middlewares/error.js");
 const authMiddleware = require("./middlewares/auth.js");
@@ -40,7 +40,7 @@ app.get("/auth/me", AuthValidation.me(), AuthController.getMe);
 
 app.get("/users", authMiddleware, UserController.getAll);
 
-app.post("/rooms/get", ChatValidation.getChat(), RoomsController.get);
+app.post("/rooms/get", authMiddleware, RoomValidation.get(), RoomController.get);
 
 app.get("/token/update", TokenController.update);
 app.get("/token/check", TokenController.check);

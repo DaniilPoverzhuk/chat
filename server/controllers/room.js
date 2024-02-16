@@ -1,12 +1,12 @@
 const ErrorService = require("../services/error.js");
-const ChatService = require("../services/chat.js");
+const RoomService = require("../services/room.js");
 
-class RoomsController {
-  async getRoom(req, res, next) {
+class RoomController {
+  async get(req, res, next) {
     try {
       ErrorService.checkError(req);
 
-      const room = await ChatService.getRoom(req.body);
+      const room = await RoomService.get(req.body);
 
       res.status(200).json({
         message: "Room has been successfully received",
@@ -18,4 +18,4 @@ class RoomsController {
   }
 }
 
-module.exports = new ChatController();
+module.exports = new RoomController();
