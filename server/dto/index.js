@@ -1,6 +1,7 @@
 module.exports = (payload) => {
-  if (!payload) return;
+  if (!payload) return null;
 
   const { dataValues } = payload;
+
   return dataValues;
 };

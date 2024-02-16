@@ -9,7 +9,6 @@ class UserController {
 
       const user = req.body;
 
-      console.log(user);
       const users = await Models.User.findAll({
         where: {
           email: {

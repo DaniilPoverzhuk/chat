@@ -1,9 +1,9 @@
 const ErrorService = require("../services/error.js");
 const AuthService = require("../services/auth.js");
 const TokenService = require("../services/token.js");
-const userDto = require("../dto/user.js");
 const Models = require("../models/index.js");
 const ApiError = require("../error/errorHandler.js");
+const dto = require("../dto/index.js");
 
 class AuthController {
   async getMe(req, res, next) {
@@ -30,7 +30,7 @@ class AuthController {
     try {
       ErrorService.checkError(req);
 
-      const user = userDto(await AuthService.login(req.body));
+      const user = dto(await AuthService.login(req.body));
       const tokens = await TokenService.generateTokens(user);
 
       await TokenService.saveToken(user.id, tokens);
