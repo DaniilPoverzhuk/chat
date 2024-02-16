@@ -11,7 +11,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 
 import * as AuthService from "@/service/auth";
 
-import { setData } from "@/lib/store/slices/user";
+import { setAuthor } from "@/lib/store/slices/user";
 import { useAppDispatch } from "@/lib/store";
 
 import { IError } from "@/axios/types";
@@ -59,7 +59,7 @@ const Login: React.FC = () => {
     try {
       const { data } = await AuthService.registration(formData);
 
-      dispatch(setData(data.user));
+      dispatch(setAuthor(data.user));
 
       setLoading(true);
       toast.success("Регистрация прошла успешно!");

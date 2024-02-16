@@ -40,15 +40,8 @@ const ListMessages: React.FC = () => {
           overflowY: "auto",
         }}
       >
-        <Message value="new message" isAuthor />
-        <Message value="new message" isAuthor />
-        <Message value="new message" isAuthor />
-        <Message value="new message" isAuthor />
-        <Message value="new message" isAuthor />
-        <Message value="new message" isAuthor />
-        <Message value="new message" isAuthor />
-        <Message value="new message" isAuthor />
-        <Message value="old message" isAuthor={false} />
+        {/* <Message value="new message" isAuthor />
+        <Message value="old message" isAuthor={false} /> */}
       </List>
     </Box>
   );
