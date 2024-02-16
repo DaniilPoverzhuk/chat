@@ -3,7 +3,7 @@ class LocalStorage {
     localStorage.setItem(key, JSON.stringify(payload));
   }
 
-  get(key: string) {
+  get<T>(key: string): T {
     return JSON.parse(localStorage.getItem(key)!);
   }
 }

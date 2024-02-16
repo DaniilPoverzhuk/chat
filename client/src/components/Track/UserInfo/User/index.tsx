@@ -2,7 +2,9 @@ import React from "react";
 import clsx from "clsx";
 
 import styles from "./index.module.scss";
+
 import { Box, Grid, Typography } from "@mui/material";
+
 import { useAppSelector } from "@/lib/store";
 
 interface Props {

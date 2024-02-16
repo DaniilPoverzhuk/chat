@@ -1,10 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
-import user from "@/lib/store/slices/user";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+
+import user from "@/lib/store/slices/user";
+import room from "@/lib/store/slices/room";
 
 const store = configureStore({
   reducer: {
     user,
+    room,
   },
 });
 

@@ -4,11 +4,9 @@ import { IconButton, InputBase, Paper } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { IUser } from "@/types";
 
-interface Props {
-  users: IUser[];
-}
+interface Props {}
 
-const Search: React.FC<Props> = ({ users }) => {
+const Search: React.FC<Props> = () => {
   return (
     <Paper
       component="form"

@@ -1,5 +1,5 @@
 import axios from "axios";
-import LocalStorage from "@/utils/localStorage";
+import CustomLocalStorage from "@/utils/CustomLocalStorage";
 
 const instance = axios.create({
   baseURL: "http://localhost:5001/",
@@ -7,13 +7,12 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use((config) => {
-  config.headers.Authorization = LocalStorage.get("accessToken");
+  config.headers.Authorization = CustomLocalStorage.get("accessToken");
   return config;
 });
 
 instance.interceptors.response.use((request) => {
   console.log(request);
-
   return request;
 });
 

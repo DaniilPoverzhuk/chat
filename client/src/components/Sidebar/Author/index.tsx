@@ -1,10 +1,12 @@
 import React from "react";
-
 import { Box, Grid, Typography } from "@mui/material";
-import { useAppSelector } from "@/lib/store";
+
+import CustomLocalStorage from "@/utils/CustomLocalStorage";
+
+import { IUser } from "@/types";
 
 const Author: React.FC = () => {
-  const { data } = useAppSelector((store) => store.user);
+  const author = CustomLocalStorage.get<IUser>("author");
 
   return (
     <Box>
@@ -19,7 +21,7 @@ const Author: React.FC = () => {
         <Grid item xs={9} display={"flex"} marginTop={1}>
           <Box flexDirection={"column"}>
             <Typography component={"p"} fontWeight={500}>
-              {data.username}
+              {author.username}
             </Typography>
             <Typography
               component={"p"}
@@ -27,7 +29,7 @@ const Author: React.FC = () => {
               color={"#797979"}
               fontStyle={"italic"}
             >
-              {data.email}
+              {author.email}
             </Typography>
           </Box>
         </Grid>

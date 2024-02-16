@@ -2,6 +2,7 @@ import { AxiosResponse } from "axios";
 import axios from "@/axios";
 
 import { IUser } from "@/types";
+import LocalStorage from "@/utils/CustomLocalStorage";
 
 interface IGetAllResponse {
   users: IUser[];
@@ -9,9 +10,14 @@ interface IGetAllResponse {
 }
 
 export const getAll = async (): Promise<AxiosResponse<IGetAllResponse>> => {
+  const author = LocalStorage.get<IUser>("author");
+
+  const data = { email: author.email };
+
   const response = await axios<IGetAllResponse>({
-    method: "get",
+    method: "post",
     url: "/users",
+    data,
   });
 
   return response;

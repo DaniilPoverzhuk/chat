@@ -1,26 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import ListUsers from "@/components/Sidebar/ListUsers";
 import Search from "@/components/Sidebar/Search";
 import Track from "@/components/Track";
-
-import * as UserService from "@/service/user";
+import Author from "@/components/Sidebar/Author";
 
 import { Box, Container, Grid } from "@mui/material";
-import Author from "@/components/Sidebar/Author";
-import { IUser } from "@/types";
 
 const Home: React.FC = () => {
-  const [users, setUsers] = useState<IUser[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      const response = await UserService.getAll();
-
-      setUsers(response.data.users);
-    })();
-  }, []);
-
   return (
     <Container maxWidth="lg" sx={{ height: "100%" }}>
       <Box
@@ -43,9 +30,9 @@ const Home: React.FC = () => {
               gap={1}
             >
               <Author />
-              <Search users={users} />
+              <Search />
             </Box>
-            <ListUsers users={users} />
+            <ListUsers />
           </Grid>
           <Grid item xs={8}>
             <Track />

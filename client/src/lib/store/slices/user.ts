@@ -1,10 +1,12 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { IUser } from "@/types";
-import LocalStorage from "@/utils/localStorage";
+import LocalStorage from "@/utils/CustomLocalStorage";
+import CustomLocalStorage from "@/utils/CustomLocalStorage";
 
 interface InitialState {
-  data: IUser;
+  author: IUser;
   selectedUser: IUser;
+  users: IUser[] | [];
 }
 
 // const defaultDataUser = {
@@ -21,8 +23,9 @@ interface InitialState {
 // };
 
 const initialState: InitialState = {
-  data: LocalStorage.get("user"),
-  selectedUser: LocalStorage.get("selectedUser"),
+  author: LocalStorage.get<IUser>("author"),
+  selectedUser: LocalStorage.get<IUser>("selectedUser"),
+  users: [],
 };
 
 const UserSlice = createSlice({
@@ -30,14 +33,19 @@ const UserSlice = createSlice({
   initialState,
   reducers: {
     setAuthor: (state: InitialState, action: PayloadAction<IUser>) => {
-      state.data = action.payload;
+      state.author = action.payload;
     },
     setSelectedUser: (state: InitialState, action: PayloadAction<IUser>) => {
+      CustomLocalStorage.set(action.payload, "selectedUser");
+
       state.selectedUser = action.payload;
+    },
+    setUsers: (state: InitialState, action: PayloadAction<IUser[]>) => {
+      state.users = action.payload;
     },
   },
 });
 
-export const { setAuthor, setSelectedUser } = UserSlice.actions;
+export const { setAuthor, setUsers, setSelectedUser } = UserSlice.actions;
 
 export default UserSlice.reducer;

@@ -4,10 +4,9 @@ import { AxiosError } from "axios";
 
 import * as AuthService from "@/service/auth";
 
-import LocalStorage from "@/utils/localStorage";
-
 import { IError } from "@/axios/types";
-import { IUser } from "@/types";
+
+import CustomLocalStorage from "@/utils/CustomLocalStorage";
 
 const privateRoutes = ["/"];
 
@@ -21,11 +20,10 @@ export default () => {
         try {
           const response = await AuthService.check();
 
-          LocalStorage.set<string>(
+          CustomLocalStorage.set<string>(
             response.data.user.accessToken,
             "accessToken"
           );
-          LocalStorage.set<IUser>(response.data.user, "user");
         } catch (err) {
           const errorObject = err as AxiosError<IError>;
 
