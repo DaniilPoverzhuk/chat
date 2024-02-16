@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import styles from "./index.module.scss";
 
 import User from "./User";
@@ -14,7 +14,7 @@ import { setData as setDataCurrentRoom } from "@/lib/store/slices/room";
 import * as RoomService from "@/service/room";
 import * as UserService from "@/service/user";
 
-const ListUsers = () => {
+const ListUsers: React.FC = () => {
   const dispatch = useAppDispatch();
   const { author, selectedUser, users } = useAppSelector((store) => store.user);
 
