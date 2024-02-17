@@ -7,12 +7,12 @@ class UserController {
     try {
       ErrorService.checkError(req);
 
-      const user = req.body;
+      const { email } = req.body;
 
       const users = await Models.User.findAll({
         where: {
           email: {
-            [Op.not]: user.email,
+            [Op.not]: email,
           },
         },
       });

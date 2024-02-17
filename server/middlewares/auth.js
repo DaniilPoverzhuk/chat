@@ -1,7 +1,7 @@
 const ApiError = require("../error/errorHandler.js");
 const TokenService = require("../services/token.js");
 
-module.exports = (req, res, next) => {
+module.exports = (req, _, next) => {
   try {
     const accessToken = req.headers.authorization;
 
@@ -14,8 +14,6 @@ module.exports = (req, res, next) => {
     if (!user) {
       throw new ApiError().UnauthorizedError();
     }
-
-    req.body = user;
 
     next();
   } catch (err) {

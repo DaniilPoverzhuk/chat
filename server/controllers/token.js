@@ -32,9 +32,9 @@ class TokenController {
 
   async check(req, res, next) {
     try {
-      const accessToken = req.headers.authorization.split(" ")[1];
+      const accessToken = req.headers?.authorization?.split(" ")[1];
 
-      if (!accessToken) {
+      if (!accessToken || accessToken === "null") {
         throw new ApiError().UnauthorizedError();
       }
 

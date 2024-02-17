@@ -42,7 +42,6 @@ class AuthController {
         user: { ...user, ...tokens },
       });
     } catch (err) {
-      console.log(err);
       next(err);
     }
   }
@@ -51,7 +50,7 @@ class AuthController {
     try {
       ErrorService.checkError(req);
 
-      const user = userDto(await AuthService.registration(req.body));
+      const user = dto(await AuthService.registration(req.body));
       const tokens = await TokenService.generateTokens(user);
 
       await TokenService.saveToken(user.id, tokens);
