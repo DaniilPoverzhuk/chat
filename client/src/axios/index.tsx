@@ -2,7 +2,7 @@ import axios from "axios";
 import CustomLocalStorage from "@/utils/CustomLocalStorage";
 
 const instance = axios.create({
-  baseURL: "http://localhost:5001/",
+  baseURL: import.meta.env.VITE_BASE_SERVER_URL,
   withCredentials: true,
 });
 

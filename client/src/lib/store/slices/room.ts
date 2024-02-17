@@ -22,7 +22,6 @@ const RoomSlice = createSlice({
   initialState,
   reducers: {
     setData: (state: InitialState, action: PayloadAction<IRoom>) => {
-      console.log(action.payload, "- RoomSlice");
       state.data = action.payload;
     },
   },

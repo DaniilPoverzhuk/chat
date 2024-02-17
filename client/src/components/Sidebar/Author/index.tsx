@@ -21,7 +21,7 @@ const Author: React.FC = () => {
         <Grid item xs={9} display={"flex"} marginTop={1}>
           <Box flexDirection={"column"}>
             <Typography component={"p"} fontWeight={500}>
-              {author.username}
+              {author?.username}
             </Typography>
             <Typography
               component={"p"}
@@ -29,7 +29,7 @@ const Author: React.FC = () => {
               color={"#797979"}
               fontStyle={"italic"}
             >
-              {author.email}
+              {author?.email}
             </Typography>
           </Box>
         </Grid>
