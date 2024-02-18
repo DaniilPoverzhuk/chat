@@ -9,7 +9,7 @@ interface LoginProps {
   password: string;
 }
 
-interface IUserDataResponse {
+export interface IUserDataResponse {
   message: string;
   user: IUser;
 }
@@ -46,24 +46,6 @@ export const registration = async (
 
   LocalStorage.set<string>(response.data.user.accessToken, "accessToken");
   LocalStorage.set<IUser>(response.data.user, "author");
-
-  return response;
-};
-
-export const check = async (): Promise<AxiosResponse<IUserDataResponse>> => {
-  const headers = {
-    Authorization: `Bearer ${LocalStorage.get("accessToken")}`,
-  };
-
-  const response = await axios<IUserDataResponse>({
-    method: "get",
-    url: "http://localhost:5001/token/check",
-    headers,
-    withCredentials: true,
-  });
-
-  LocalStorage.set<string>(response.data.user.accessToken, "accessToken");
-  LocalStorage.set<IUser>(response.data.user, "user");
 
   return response;
 };

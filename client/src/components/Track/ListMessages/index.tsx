@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { io } from "socket.io-client";
 import { Box, List } from "@mui/material";
 
 import Message from "../Message";
@@ -8,6 +9,15 @@ import setCSSProperty from "@/utils/setCSSProperty";
 const ListMessages: React.FC = () => {
   const rootRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    const socket = io(import.meta.env.VITE_BASE_SERVER_URL);
+
+    socket.on("get-message", (message) => {
+      console.log(message);
+    });
+  }, []);
 
   useEffect(() => {
     if (!rootRef.current || !listRef.current) return;

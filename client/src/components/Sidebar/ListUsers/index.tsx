@@ -1,4 +1,6 @@
 import React, { useEffect } from "react";
+import { io } from "socket.io-client";
+
 import styles from "./index.module.scss";
 
 import User from "./User";
@@ -18,15 +20,23 @@ const ListUsers: React.FC = () => {
   const dispatch = useAppDispatch();
   const { author, selectedUser, users } = useAppSelector((store) => store.user);
 
-  const setSelectedUserHandler = async (selectedUser: IUser) => {
-    const response = await RoomService.get({
+  const setSelectedUserHandler = async (
+    selectedUser: IUser,
+    isSelected: boolean
+  ) => {
+    if (isSelected) return;
+
+    const { data } = await RoomService.get({
       senderId: author.id!,
       getterId: selectedUser.id!,
     });
-    const room = response.data.room;
+    const room = data.room;
+    const socket = io(import.meta.env.VITE_BASE_SERVER_URL);
 
     dispatch(setSelectedUser(selectedUser));
     dispatch(setDataCurrentRoom(room));
+
+    socket.emit("create-room", room.id);
   };
 
   useEffect(() => {
@@ -44,7 +54,7 @@ const ListUsers: React.FC = () => {
           <User
             key={user.id}
             last_message="message"
-            onClick={() => setSelectedUserHandler(user)}
+            onClick={(isActive) => setSelectedUserHandler(user, isActive)}
             isActive={user?.id === selectedUser?.id}
             {...user}
           />

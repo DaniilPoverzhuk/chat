@@ -7,7 +7,7 @@ import { IUser } from "@/types";
 
 interface Props extends IUser {
   last_message: string;
-  onClick: () => void;
+  onClick: (isActive: boolean) => void;
   isActive: boolean;
 }
 
@@ -27,7 +27,7 @@ const User: React.FC<Props> = ({
   isActive,
 }) => {
   return (
-    <ListItem disablePadding onClick={onClick}>
+    <ListItem disablePadding onClick={() => onClick(isActive)}>
       <ListItemButton selected={isActive} sx={{ padding: "12.5px 20px" }}>
         <Grid container display={"flex"} alignItems={"center"} gap={"15px"}>
           <Grid
