@@ -25,3 +25,13 @@ exports.get = async ({ senderId, getterId }) => {
 
   return room;
 };
+
+exports.getById = async (id) => {
+  try {
+    const room = await Models.Room.findOne({ where: id });
+
+    return room;
+  } catch (err) {
+    return null;
+  }
+};

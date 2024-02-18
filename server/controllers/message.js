@@ -14,8 +14,8 @@ class MessageController {
       }
 
       res.status(200).json({
-        message_status: "Message has been sent successfully",
-        message,
+        message: "Message has been sent successfully",
+        value: message,
       });
     } catch (err) {
       next(err);

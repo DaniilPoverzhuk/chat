@@ -28,6 +28,7 @@ const io = new Server(server, {
   cors: {
     origin: process.env.CLIENT_URL,
     credentials: true,
+    methods: ["GET", "POST"],
   },
 });
 const PORT = process.env.PORT || 5001;
@@ -47,7 +48,13 @@ app.use(
 );
 
 io.on("connection", (socket) => {
-  console.log("Подключение установлено");
+  socket.on("create-room", (roomId) => {
+    socket.join(roomId);
+  });
+
+  socket.on("send-message", (message) => {
+    io.to(message.roomId).emit("get-message", message);
+  });
 });
 
 app.post("/auth/login", AuthValidation.login(), AuthController.login);
@@ -57,6 +64,7 @@ app.get("/auth/me", AuthValidation.me(), AuthController.getMe);
 app.post("/users", authMiddleware, UserValidation.getAll(), UserController.getAll);
 
 app.post("/rooms/get", authMiddleware, RoomValidation.get(), RoomController.get);
+app.get("/rooms/:id", authMiddleware, RoomValidation.getById(), RoomController.getById);
 
 app.post("/message/send", MessageValidation.send(), MessageController.send);
 
