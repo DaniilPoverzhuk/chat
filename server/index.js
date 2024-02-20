@@ -20,8 +20,6 @@ const MessageValidation = require("./validation/message.js");
 const errorMiddleware = require("./middlewares/error.js");
 const authMiddleware = require("./middlewares/auth.js");
 
-const ApiError = require("./error/errorHandler.js");
-
 dotenv.config();
 
 const app = express();
@@ -44,13 +42,34 @@ app.use(
 app.use(cookieParser(process.env.COOKIE_SECRET_KEY));
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
+const users = {};
+
+const getOnlineUsers = (io) => {
+  io.emit("get-online-users", users);
+};
+
 io.on("connection", (socket) => {
+  socket.on("add-user", (user) => {
+    users[user.id] = socket.id;
+
+    getOnlineUsers(io);
+  });
+
+  socket.on("disconnect", () => {
+    for (const [key, value] of Object.entries(users)) {
+      if (value === socket.id) {
+        delete users[key];
+      }
+    }
+
+    getOnlineUsers(io);
+  });
+
   socket.on("create-room", (roomId) => {
     if (!socket.rooms[roomId]) socket.join(roomId);
   });
 
   socket.on("send-message", (message) => {
-    console.log(message);
     io.emit(message.roomId, message);
   });
 });
@@ -61,12 +80,14 @@ app.get("/auth/me", AuthValidation.me(), AuthController.getMe);
 // app.get("/auth/logout", AuthValidation.logout(), AuthController.logout);
 
 app.post("/users", authMiddleware, UserValidation.getAll(), UserController.getAll);
+app.get("/users/online", UserValidation.getAllOnline(), UserController.getAllOnline);
+app.post("/users/online/change-status", UserValidation.changeStatus(), UserController.changeStatus);
 
 app.post("/rooms/get", authMiddleware, RoomValidation.get(), RoomController.get);
 app.get("/rooms/:id", authMiddleware, RoomValidation.getById(), RoomController.getById);
 
-app.post("/message/save", MessageValidation.save(), MessageController.save);
-app.get("/message/getAll", MessageValidation.getAll(), MessageController.getAll);
+app.post("/message/save", authMiddleware, MessageValidation.save(), MessageController.save);
+app.post("/message/getAll", authMiddleware, MessageValidation.getAll(), MessageController.getAll);
 
 app.get("/token/update", TokenController.update);
 app.get("/token/check", TokenController.check);

@@ -8,8 +8,6 @@ class RoomController {
     try {
       ErrorService.checkError(req);
 
-      console.log("ROOM CONTROLLER");
-
       const room = await RoomService.get(req.body);
 
       res.status(200).json({
