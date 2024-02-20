@@ -1,6 +1,7 @@
 const ErrorService = require("../services/error.js");
 const Models = require("../models/index.js");
 const { Op } = require("sequelize");
+const ApiError = require("../error/errorHandler.js");
 
 class UserController {
   async getAll(req, res, next) {

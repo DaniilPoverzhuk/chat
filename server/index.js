@@ -20,6 +20,8 @@ const MessageValidation = require("./validation/message.js");
 const errorMiddleware = require("./middlewares/error.js");
 const authMiddleware = require("./middlewares/auth.js");
 
+const ApiError = require("./error/errorHandler.js");
+
 dotenv.config();
 
 const app = express();
@@ -40,33 +42,31 @@ app.use(
   })
 );
 app.use(cookieParser(process.env.COOKIE_SECRET_KEY));
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL,
-    credentials: true,
-  })
-);
+app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
 io.on("connection", (socket) => {
   socket.on("create-room", (roomId) => {
-    socket.join(roomId);
+    if (!socket.rooms[roomId]) socket.join(roomId);
   });
 
   socket.on("send-message", (message) => {
-    io.to(message.roomId).emit("get-message", message);
+    console.log(message);
+    io.emit(message.roomId, message);
   });
 });
 
 app.post("/auth/login", AuthValidation.login(), AuthController.login);
 app.post("/auth/registration", AuthValidation.registration(), AuthController.registration);
 app.get("/auth/me", AuthValidation.me(), AuthController.getMe);
+// app.get("/auth/logout", AuthValidation.logout(), AuthController.logout);
 
 app.post("/users", authMiddleware, UserValidation.getAll(), UserController.getAll);
 
 app.post("/rooms/get", authMiddleware, RoomValidation.get(), RoomController.get);
 app.get("/rooms/:id", authMiddleware, RoomValidation.getById(), RoomController.getById);
 
-app.post("/message/send", MessageValidation.send(), MessageController.send);
+app.post("/message/save", MessageValidation.save(), MessageController.save);
+app.get("/message/getAll", MessageValidation.getAll(), MessageController.getAll);
 
 app.get("/token/update", TokenController.update);
 app.get("/token/check", TokenController.check);

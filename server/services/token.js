@@ -26,10 +26,14 @@ class TokenService {
   }
 
   getRefreshTokenFromCookie(req) {
-    return req.headers.cookie
-      .split(" ")
-      .find((item) => item.split("=")[0] === "refreshToken")
-      .split("=")[1];
+    try {
+      return req.headers.cookie
+        .split(" ")
+        .find((item) => item.split("=")[0] === "refreshToken")
+        .split("=")[1];
+    } catch (error) {
+      return null;
+    }
   }
 
   isValidAccessToken(accessToken) {

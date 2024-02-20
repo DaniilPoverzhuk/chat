@@ -27,6 +27,7 @@ class AuthController {
   }
 
   async login(req, res, next) {
+    console.log(req);
     try {
       ErrorService.checkError(req);
 
@@ -61,6 +62,14 @@ class AuthController {
         message: "Successful registration",
         user: { ...user, ...tokens },
       });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async logout(req, res, next) {
+    try {
+      ErrorService.checkError(req);
     } catch (err) {
       next(err);
     }

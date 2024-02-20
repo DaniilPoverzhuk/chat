@@ -1,14 +1,25 @@
 const Models = require("../models/index.js");
 const dto = require("../dto/index.js");
+const { Op } = require("sequelize");
 
 exports.get = async ({ senderId, getterId }) => {
   const room = dto(
     await Models.Room.findOne({
       where: {
-        users: {
-          getterId,
-          senderId,
-        },
+        [Op.or]: [
+          {
+            users: {
+              getterId,
+              senderId,
+            },
+          },
+          {
+            users: {
+              getterId: senderId,
+              senderId: getterId,
+            },
+          },
+        ],
       },
     })
   );

@@ -6,6 +6,10 @@ class TokenController {
     try {
       const refreshToken = TokenService.getRefreshTokenFromCookie(req);
 
+      if (!refreshToken || refreshToken === "null") {
+        throw new ApiError().UnauthorizedError();
+      }
+
       const { exp, iat, ...user } = TokenService.isValidRefreshToken(refreshToken);
 
       if (!user) {
@@ -32,7 +36,7 @@ class TokenController {
 
   async check(req, res, next) {
     try {
-      const accessToken = req.headers?.authorization?.split(" ")[1];
+      const accessToken = req.headers?.authorization;
 
       if (!accessToken || accessToken === "null") {
         throw new ApiError().UnauthorizedError();

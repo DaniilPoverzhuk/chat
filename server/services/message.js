@@ -9,3 +9,13 @@ exports.save = async (payload) => {
     return null;
   }
 };
+
+exports.getAll = async (roomId) => {
+  try {
+    const messages = await Models.Message.findAll({ where: { roomId } });
+
+    return messages;
+  } catch (err) {
+    return null;
+  }
+};
