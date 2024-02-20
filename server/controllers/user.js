@@ -29,43 +29,6 @@ class UserController {
       next(err);
     }
   }
-
-  async getAllOnline(req, res, next) {
-    try {
-      ErrorService.checkError(req);
-
-      const users = UserService.getAllOnline(req.body);
-
-      if (!users) {
-        throw new ApiError().BadRequest("При получени пользователей произошла ошибка :(");
-      }
-
-      return res.status(200).json({
-        message: "Users have been successfully received",
-        users,
-      });
-    } catch (err) {
-      next(err);
-    }
-  }
-
-  async changeStatus(req, res, next) {
-    try {
-      ErrorService.checkError(req);
-
-      const response = await UserService.changeStatus(req.body);
-
-      if (!response) {
-        throw new ApiError().BadRequest("При обновлении онлайн статуса произошла ошибка :(");
-      }
-
-      return res.status(200).json({
-        message: "User's online status has been successfully updated",
-      });
-    } catch (err) {
-      next(err);
-    }
-  }
 }
 
 module.exports = new UserController();
