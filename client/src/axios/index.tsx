@@ -3,15 +3,13 @@ import CustomLocalStorage from "@/utils/CustomLocalStorage";
 
 import * as TokenService from "@/service/token";
 
-console.log(import.meta.env.VITE_BASE_SERVER_URL);
-
 const instance = axios.create({
   baseURL: import.meta.env.VITE_BASE_SERVER_URL,
   withCredentials: true,
 });
 
 instance.interceptors.request.use((config) => {
-  console.log("request - ", config, "request data - ", config.data);
+  // console.log("request - ", config, "request data - ", config.data);
   config.headers.Authorization = CustomLocalStorage.get("accessToken");
   return config;
 });
@@ -38,7 +36,7 @@ instance.interceptors.response.use(
 
         return instance.request(originalRequest);
       } catch (error) {
-        console.log("error");
+        console.log(error, "- ошибка interceptors");
       }
     }
 

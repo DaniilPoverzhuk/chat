@@ -8,8 +8,6 @@ import { IUser } from "@/types";
 const Author: React.FC = memo(() => {
   const author = CustomLocalStorage.get<IUser>("author");
 
-  console.log("re-render author");
-
   return (
     <Box>
       <Grid container spacing={2}>

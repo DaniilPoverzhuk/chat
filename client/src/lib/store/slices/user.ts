@@ -42,9 +42,26 @@ const UserSlice = createSlice({
     setUsers: (state: InitialState, action: PayloadAction<IUser[]>) => {
       state.users = action.payload;
     },
+    updateOnlineStatus: (
+      state: InitialState,
+      action: PayloadAction<{ [id: string]: string }>
+    ) => {
+      const idsOnlineUsers = Object.keys(action.payload);
+
+      state.users = state.users.map((user) => {
+        user.isOnline = false;
+
+        if (idsOnlineUsers.includes(user.id?.toString()!)) {
+          user.isOnline = true;
+        }
+
+        return user;
+      });
+    },
   },
 });
 
-export const { setAuthor, setUsers, setSelectedUser } = UserSlice.actions;
+export const { setAuthor, setUsers, setSelectedUser, updateOnlineStatus } =
+  UserSlice.actions;
 
 export default UserSlice.reducer;

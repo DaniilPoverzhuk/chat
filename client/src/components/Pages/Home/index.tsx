@@ -20,10 +20,15 @@ const Home: React.FC = () => {
             xs={4}
             borderRight={"1px solid #E0E0E0"}
             padding={"20px 0"}
-            display={"flex"}
-            direction={"column"}
           >
-            <Sidebar />
+            <Grid
+              container
+              display={"flex"}
+              direction={"column"}
+              height={"100%"}
+            >
+              <Sidebar />
+            </Grid>
           </Grid>
           <Grid item xs={8}>
             <Track />

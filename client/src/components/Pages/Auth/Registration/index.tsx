@@ -22,8 +22,6 @@ import useModal from "@/hooks/useModal";
 
 import Modal from "@/ui/Modal";
 
-import AvatarField from "./AvatarField";
-
 import "react-toastify/dist/ReactToastify.css";
 import ModalContent from "./ModalContent";
 
@@ -59,7 +57,7 @@ const Login: React.FC = () => {
     try {
       const { data } = await AuthService.registration(formData);
 
-      dispatch(setAuthor(data.user));
+      dispatch(setAuthor({ ...data.user, isOnline: true }));
 
       setLoading(true);
       toast.success("Регистрация прошла успешно!");

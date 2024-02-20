@@ -42,7 +42,7 @@ const Login: React.FC = () => {
     try {
       const { data } = await AuthService.login(formData);
 
-      dispatch(setAuthor(data.user));
+      dispatch(setAuthor({ ...data.user, isOnline: true }));
 
       setLoading(true);
       toast.success("Аутентификация прошла успешно!");

@@ -72,12 +72,12 @@ const ListMessages: React.FC = () => {
           gap: "20px",
           height: "0px",
           paddingRight: "15px",
+          paddingLeft: "3px",
           overflowY: "auto",
           minHeight: "400px",
         }}
       >
         {messages.map((message, idx) => {
-          console.log(message, author.id);
           return (
             <Message
               key={idx}

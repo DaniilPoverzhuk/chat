@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { io } from "socket.io-client";
 
 import styles from "./index.module.scss";
@@ -13,13 +13,16 @@ import { Box, List, Typography } from "@mui/material";
 import { IUser } from "@/types";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store";
-import { setSelectedUser, setUsers } from "@/lib/store/slices/user";
+import {
+  setSelectedUser,
+  setUsers,
+  updateOnlineStatus,
+} from "@/lib/store/slices/user";
 import { IRoom, setData as setDataCurrentRoom } from "@/lib/store/slices/room";
 
 import * as RoomService from "@/service/room";
 import * as UserService from "@/service/user";
-
-const socket = io(import.meta.env.VITE_BASE_SERVER_URL);
+import useSocket from "@/hooks/useSocket";
 
 interface Props {
   search: string;
@@ -27,11 +30,9 @@ interface Props {
 
 const ListUsers: React.FC<Props> = ({ search }) => {
   const dispatch = useAppDispatch();
+  const socket = useSocket();
   const { author, selectedUser, users } = useAppSelector((store) => store.user);
-  const filteredUsers = useMemo(
-    () => users.filter((user) => user.username.includes(search)),
-    [search, users.length]
-  );
+  const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
 
   const setSelectedUserHandler = async (
     selectedUser: IUser,
@@ -51,6 +52,10 @@ const ListUsers: React.FC<Props> = ({ search }) => {
     socket.emit("create-room", room.id);
   };
 
+  const updateOnlineUsers = (users: { [id: string]: string }) => {
+    dispatch(updateOnlineStatus(users));
+  };
+
   useEffect(() => {
     const room = CustomLocalStorage.get<IRoom>("currentRoom");
 
@@ -58,8 +63,21 @@ const ListUsers: React.FC<Props> = ({ search }) => {
       socket.emit("create-room", room.id);
     }
 
+    socket.on("get-online-users", (users) => {
+      console.log(users);
+      updateOnlineUsers(users);
+    });
+
     setAllUsers();
-  }, []);
+  }, [socket]);
+
+  useEffect(() => {
+    socket.emit("add-user", author);
+  }, [author, socket]);
+
+  useEffect(() => {
+    setFilteredUsers(users.filter((user) => user.username.includes(search)));
+  }, [search, users]);
 
   const setAllUsers = async () => {
     const response = await UserService.getAll();
@@ -68,7 +86,7 @@ const ListUsers: React.FC<Props> = ({ search }) => {
   };
 
   return (
-    <Box className={styles.root} height={"100%"}>
+    <Box className={styles.root} width={"100%"} sx={{ flexGrow: 1 }}>
       <List sx={{ height: "100%", position: "relative" }}>
         <ButtonAddGroup />
         {!Boolean(filteredUsers.length) && (
