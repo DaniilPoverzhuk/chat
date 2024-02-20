@@ -1,16 +1,18 @@
 import React, { useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { io } from "socket.io-client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 
 import { InputBase, Box, Paper, IconButton } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import AttachmentSharpIcon from "@mui/icons-material/AttachmentSharp";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import CustomLocalStorage from "@/utils/CustomLocalStorage";
-import { IUser } from "@/types";
-import { useAppDispatch, useAppSelector } from "@/lib/store";
+
+import { useAppSelector } from "@/lib/store";
+
+import * as MessageService from "@/service/message";
+
 import { socket } from "@/pages/home";
+import { IMessage } from "@/types";
 
 const formSchema = z.object({
   message: z.string().min(1),
@@ -20,19 +22,23 @@ const formSchema = z.object({
 type TypeFormSchema = z.infer<typeof formSchema>;
 
 const Form: React.FC = () => {
-  const { register, handleSubmit } = useForm<TypeFormSchema>({
+  const { register, handleSubmit, reset } = useForm<TypeFormSchema>({
     resolver: zodResolver(formSchema),
   });
   const { room, user } = useAppSelector((store) => store);
 
-  const sendMessage: SubmitHandler<TypeFormSchema> = (data) => {
+  const sendMessage: SubmitHandler<TypeFormSchema> = async (data) => {
     const message = {
       value: data.message,
-      senderId: user.author.id,
-      roomId: room.data?.id,
-    };
+      senderId: user.author.id!,
+      roomId: room.data?.id!,
+    } as IMessage;
 
     socket.emit("send-message", message);
+
+    await MessageService.save(message);
+
+    reset();
   };
 
   useEffect(() => {

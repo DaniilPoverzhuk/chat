@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AxiosError } from "axios";
 
-import * as AuthService from "@/service/auth";
+import * as TokenService from "@/service/token";
 
 import { IError } from "@/axios/types";
 
@@ -18,18 +18,14 @@ export default () => {
     if (privateRoutes.includes(pathname)) {
       (async () => {
         try {
-          const response = await AuthService.check();
+          const response = await TokenService.check();
 
           CustomLocalStorage.set<string>(
             response.data.user.accessToken,
             "accessToken"
           );
-        } catch (err) {
-          const errorObject = err as AxiosError<IError>;
-
-          if (errorObject.response?.data.status === 401) {
-            navigate("/registration");
-          }
+        } catch (error) {
+          navigate("/login");
         }
       })();
     }

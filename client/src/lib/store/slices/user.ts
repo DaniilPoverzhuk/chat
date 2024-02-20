@@ -1,6 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { IUser } from "@/types";
-import LocalStorage from "@/utils/CustomLocalStorage";
 import CustomLocalStorage from "@/utils/CustomLocalStorage";
 
 interface InitialState {
@@ -23,8 +22,8 @@ interface InitialState {
 // };
 
 const initialState: InitialState = {
-  author: LocalStorage.get<IUser>("author"),
-  selectedUser: LocalStorage.get<IUser>("selectedUser"),
+  author: CustomLocalStorage.get<IUser>("author"),
+  selectedUser: CustomLocalStorage.get<IUser>("selectedUser"),
   users: [],
 };
 

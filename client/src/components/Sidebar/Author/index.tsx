@@ -7,7 +7,6 @@ import { IUser } from "@/types";
 
 const Author: React.FC = () => {
   const author = CustomLocalStorage.get<IUser>("author");
-
   return (
     <Box>
       <Grid container spacing={2}>

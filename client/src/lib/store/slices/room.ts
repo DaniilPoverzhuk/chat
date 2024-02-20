@@ -1,4 +1,5 @@
 import { ID } from "@/types";
+import CustomLocalStorage from "@/utils/CustomLocalStorage";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 type TypeCommunity = number[];
@@ -14,7 +15,7 @@ interface InitialState {
 }
 
 const initialState: InitialState = {
-  data: null,
+  data: CustomLocalStorage.get("currentRoom") ?? null,
 };
 
 const RoomSlice = createSlice({
@@ -22,6 +23,7 @@ const RoomSlice = createSlice({
   initialState,
   reducers: {
     setData: (state: InitialState, action: PayloadAction<IRoom>) => {
+      CustomLocalStorage.set(action.payload, "currentRoom");
       state.data = action.payload;
     },
   },

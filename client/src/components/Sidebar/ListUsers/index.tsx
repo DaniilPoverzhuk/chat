@@ -3,7 +3,10 @@ import { io } from "socket.io-client";
 
 import styles from "./index.module.scss";
 
+import CustomLocalStorage from "@/utils/CustomLocalStorage";
+
 import User from "./User";
+import ButtonAddGroup from "./AddGroup";
 
 import { Box, List } from "@mui/material";
 
@@ -11,10 +14,12 @@ import { IUser } from "@/types";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import { setSelectedUser, setUsers } from "@/lib/store/slices/user";
-import { setData as setDataCurrentRoom } from "@/lib/store/slices/room";
+import { IRoom, setData as setDataCurrentRoom } from "@/lib/store/slices/room";
 
 import * as RoomService from "@/service/room";
 import * as UserService from "@/service/user";
+
+const socket = io(import.meta.env.VITE_BASE_SERVER_URL);
 
 const ListUsers: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -31,7 +36,6 @@ const ListUsers: React.FC = () => {
       getterId: selectedUser.id!,
     });
     const room = data.room;
-    const socket = io(import.meta.env.VITE_BASE_SERVER_URL);
 
     dispatch(setSelectedUser(selectedUser));
     dispatch(setDataCurrentRoom(room));
@@ -40,9 +44,14 @@ const ListUsers: React.FC = () => {
   };
 
   useEffect(() => {
+    const room = CustomLocalStorage.get<IRoom>("currentRoom");
+
+    if (room) {
+      socket.emit("create-room", room.id);
+    }
+
     (async () => {
       const response = await UserService.getAll();
-
       dispatch(setUsers(response.data.users));
     })();
   }, []);
@@ -50,6 +59,7 @@ const ListUsers: React.FC = () => {
   return (
     <Box className={styles.root} height={"100%"}>
       <List>
+        <ButtonAddGroup />
         {users.map((user) => (
           <User
             key={user.id}

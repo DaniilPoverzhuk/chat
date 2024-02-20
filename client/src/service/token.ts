@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import instance from "@/axios";
 
 import { IUser } from "@/types";
@@ -7,19 +7,13 @@ import { IUserDataResponse } from "./auth";
 import CustomLocalStorage from "@/utils/CustomLocalStorage";
 
 export const check = async (): Promise<AxiosResponse<IUserDataResponse>> => {
-  const headers = {
-    Authorization: `Bearer ${CustomLocalStorage.get("accessToken")}`,
-  };
-
-  const response = await axios<IUserDataResponse>({
+  const response = await instance<IUserDataResponse>({
     method: "get",
-    url: "http://localhost:5001/token/check",
-    headers,
-    withCredentials: true,
+    url: "/token/check",
   });
 
   CustomLocalStorage.set<string>(response.data.user.accessToken, "accessToken");
-  CustomLocalStorage.set<IUser>(response.data.user, "user");
+  CustomLocalStorage.set<IUser>(response.data.user, "author");
 
   return response;
 };

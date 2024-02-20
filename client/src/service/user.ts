@@ -12,7 +12,7 @@ interface IGetAllResponse {
 export const getAll = async (): Promise<AxiosResponse<IGetAllResponse>> => {
   const author = LocalStorage.get<IUser>("author");
 
-  const data = { email: author.email };
+  const data = { email: author?.email };
 
   const response = await axios<IGetAllResponse>({
     method: "post",

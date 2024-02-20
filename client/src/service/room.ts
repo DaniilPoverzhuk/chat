@@ -22,5 +22,7 @@ export const get = async (
     data,
   });
 
+  console.log(response);
+
   return response;
 };

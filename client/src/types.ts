@@ -13,3 +13,13 @@ export interface IUser extends ID {
   accessToken: string;
   isOnline: boolean;
 }
+
+export interface IMessage extends ID {
+  value: string;
+  senderId: number;
+  roomId: number;
+}
+
+export interface IDefaultResponse {
+  message: string;
+}

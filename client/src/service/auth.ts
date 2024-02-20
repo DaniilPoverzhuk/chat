@@ -1,7 +1,7 @@
 import instance from "@/axios";
-import axios, { AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 
-import LocalStorage from "@/utils/CustomLocalStorage";
+import CustomLocalStorage from "@/utils/CustomLocalStorage";
 import { IUser } from "@/types";
 
 interface LoginProps {
@@ -23,8 +23,8 @@ export const login = async (
     data,
   });
 
-  LocalStorage.set<string>(response.data.user.accessToken, "accessToken");
-  LocalStorage.set<IUser>(response.data.user, "author");
+  CustomLocalStorage.set<string>(response.data.user.accessToken, "accessToken");
+  CustomLocalStorage.set<IUser>(response.data.user, "author");
 
   return response;
 };
@@ -44,8 +44,8 @@ export const registration = async (
     data,
   });
 
-  LocalStorage.set<string>(response.data.user.accessToken, "accessToken");
-  LocalStorage.set<IUser>(response.data.user, "author");
+  CustomLocalStorage.set<string>(response.data.user.accessToken, "accessToken");
+  CustomLocalStorage.set<IUser>(response.data.user, "author");
 
   return response;
 };
