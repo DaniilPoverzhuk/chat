@@ -1,11 +1,9 @@
 import React from "react";
 
-import ListUsers from "@/components/Sidebar/ListUsers";
-import Search from "@/components/Sidebar/Search";
-import Track from "@/components/Track";
-import Author from "@/components/Sidebar/Author";
-
 import { Box, Container, Grid } from "@mui/material";
+
+import Track from "@/components/Track";
+import Sidebar from "@/components/Sidebar";
 
 const Home: React.FC = () => {
   return (
@@ -23,16 +21,7 @@ const Home: React.FC = () => {
             borderRight={"1px solid #E0E0E0"}
             padding={"20px 0"}
           >
-            <Box
-              padding={"0 20px"}
-              display={"flex"}
-              flexDirection={"column"}
-              gap={1}
-            >
-              <Author />
-              <Search />
-            </Box>
-            <ListUsers />
+            <Sidebar />
           </Grid>
           <Grid item xs={8}>
             <Track />
