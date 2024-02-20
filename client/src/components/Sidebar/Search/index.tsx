@@ -2,11 +2,12 @@ import React from "react";
 
 import { IconButton, InputBase, Paper } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { IUser } from "@/types";
 
-interface Props {}
+interface Props {
+  onChange: (value: string) => void;
+}
 
-const Search: React.FC<Props> = () => {
+const Search: React.FC<Props> = ({ onChange }) => {
   return (
     <Paper
       component="form"
@@ -21,7 +22,11 @@ const Search: React.FC<Props> = () => {
       >
         <SearchIcon />
       </IconButton>
-      <InputBase sx={{ marginLeft: "10px" }} placeholder="Search friends..." />
+      <InputBase
+        sx={{ marginLeft: "10px" }}
+        placeholder="Search friends..."
+        onChange={(event) => onChange(event.target.value)}
+      />
     </Paper>
   );
 };

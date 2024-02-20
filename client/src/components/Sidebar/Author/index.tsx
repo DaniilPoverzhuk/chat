@@ -1,12 +1,15 @@
-import React from "react";
+import React, { memo } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 
 import CustomLocalStorage from "@/utils/CustomLocalStorage";
 
 import { IUser } from "@/types";
 
-const Author: React.FC = () => {
+const Author: React.FC = memo(() => {
   const author = CustomLocalStorage.get<IUser>("author");
+
+  console.log("re-render author");
+
   return (
     <Box>
       <Grid container spacing={2}>
@@ -35,6 +38,6 @@ const Author: React.FC = () => {
       </Grid>
     </Box>
   );
-};
+});
 
 export default Author;

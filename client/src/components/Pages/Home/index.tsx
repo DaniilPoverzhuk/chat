@@ -20,6 +20,8 @@ const Home: React.FC = () => {
             xs={4}
             borderRight={"1px solid #E0E0E0"}
             padding={"20px 0"}
+            display={"flex"}
+            direction={"column"}
           >
             <Sidebar />
           </Grid>

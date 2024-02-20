@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { io } from "socket.io-client";
 
 import styles from "./index.module.scss";
@@ -8,7 +8,7 @@ import CustomLocalStorage from "@/utils/CustomLocalStorage";
 import User from "./User";
 import ButtonAddGroup from "./AddGroup";
 
-import { Box, List } from "@mui/material";
+import { Box, List, Typography } from "@mui/material";
 
 import { IUser } from "@/types";
 
@@ -21,9 +21,17 @@ import * as UserService from "@/service/user";
 
 const socket = io(import.meta.env.VITE_BASE_SERVER_URL);
 
-const ListUsers: React.FC = () => {
+interface Props {
+  search: string;
+}
+
+const ListUsers: React.FC<Props> = ({ search }) => {
   const dispatch = useAppDispatch();
   const { author, selectedUser, users } = useAppSelector((store) => store.user);
+  const filteredUsers = useMemo(
+    () => users.filter((user) => user.username.includes(search)),
+    [search, users.length]
+  );
 
   const setSelectedUserHandler = async (
     selectedUser: IUser,
@@ -50,17 +58,35 @@ const ListUsers: React.FC = () => {
       socket.emit("create-room", room.id);
     }
 
-    (async () => {
-      const response = await UserService.getAll();
-      dispatch(setUsers(response.data.users));
-    })();
+    setAllUsers();
   }, []);
+
+  const setAllUsers = async () => {
+    const response = await UserService.getAll();
+
+    dispatch(setUsers(response.data.users));
+  };
 
   return (
     <Box className={styles.root} height={"100%"}>
-      <List>
+      <List sx={{ height: "100%", position: "relative" }}>
         <ButtonAddGroup />
-        {users.map((user) => (
+        {!Boolean(filteredUsers.length) && (
+          <Typography
+            sx={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              textAlign: "center",
+              color: "#BDBDBD",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Таких пользователей нет 😥
+          </Typography>
+        )}
+        {filteredUsers.map((user) => (
           <User
             key={user.id}
             last_message="message"

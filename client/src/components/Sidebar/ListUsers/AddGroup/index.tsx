@@ -1,8 +1,9 @@
-import React from "react";
+import React, { memo } from "react";
 import { Box, Grid, ListItem, ListItemButton, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 
-const ButtonAddGroup: React.FC = () => {
+const ButtonAddGroup: React.FC = memo(() => {
+  console.log("re-render button-add-group");
   return (
     <ListItem>
       <ListItemButton sx={{ padding: "20px" }}>
@@ -23,6 +24,6 @@ const ButtonAddGroup: React.FC = () => {
       </ListItemButton>
     </ListItem>
   );
-};
+});
 
 export default ButtonAddGroup;
