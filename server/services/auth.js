@@ -36,6 +36,7 @@ class AuthService {
       password: passwordHash,
       email,
       avatar,
+      friends: [],
     });
 
     return user;

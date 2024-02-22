@@ -80,6 +80,7 @@ app.get("/auth/me", AuthValidation.me(), AuthController.getMe);
 // app.get("/auth/logout", AuthValidation.logout(), AuthController.logout);
 
 app.post("/users", authMiddleware, UserValidation.getAll(), UserController.getAll);
+app.post("/users/friends/get", UserValidation.getAllFriends(), UserController.getAllFriends);
 
 app.post("/rooms/get", authMiddleware, RoomValidation.get(), RoomController.get);
 app.get("/rooms/:id", authMiddleware, RoomValidation.getById(), RoomController.getById);
