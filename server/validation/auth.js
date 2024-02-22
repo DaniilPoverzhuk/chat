@@ -21,7 +21,7 @@ exports.registration = () => [
     .withMessage("Неверный тип данных, должна быть строка")
     .isLength({ min: 5 })
     .withMessage("Пароль должен состоять минимум из 5 символов"),
-  body("avatar").optional().isURL().withMessage("Невалидный URL"),
+  body("avatar").optional().isString().withMessage("Невалидный URL"),
 ];
 
 exports.me = () => [body("email").isEmail().withMessage("Невалидная почта")];

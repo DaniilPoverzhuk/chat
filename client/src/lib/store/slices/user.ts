@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { IUser } from "@/types";
+import { ISocketUsers, IUser } from "@/types";
 import CustomLocalStorage from "@/utils/CustomLocalStorage";
 
 interface InitialState {
@@ -7,19 +7,6 @@ interface InitialState {
   selectedUser: IUser;
   users: IUser[] | [];
 }
-
-// const defaultDataUser = {
-//   id: null,
-//   username: "",
-//   email: "",
-//   password: "",
-//   avatar: "",
-//   createdAt: "",
-//   updatedAt: "",
-//   refreshToken: "",
-//   accessToken: "",
-//   isOnline: false,
-// };
 
 const initialState: InitialState = {
   author: CustomLocalStorage.get<IUser>("author"),
@@ -44,19 +31,34 @@ const UserSlice = createSlice({
     },
     updateOnlineStatus: (
       state: InitialState,
-      action: PayloadAction<{ [id: string]: string }>
+      action: PayloadAction<ISocketUsers>
     ) => {
       const idsOnlineUsers = Object.keys(action.payload);
+
+      console.log(idsOnlineUsers, "- array of id online users");
 
       state.users = state.users.map((user) => {
         user.isOnline = false;
 
+        console.log(
+          state.author.id === user.id
+            ? `${state.author.id} - id author`
+            : `${user.id} - id user`
+        );
+
         if (idsOnlineUsers.includes(user.id?.toString()!)) {
+          console.log(user.id, "- id online user");
           user.isOnline = true;
         }
 
         return user;
       });
+
+      state.selectedUser.isOnline = idsOnlineUsers.includes(
+        state.selectedUser.id!?.toString()
+      );
+
+      CustomLocalStorage.set(state.selectedUser, "selectedUser");
     },
   },
 });

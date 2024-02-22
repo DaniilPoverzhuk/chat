@@ -13,7 +13,7 @@ const Author: React.FC = memo(() => {
       <Grid container spacing={2}>
         <Grid item xs={3}>
           <img
-            src="/images/avatars/avatar-3.svg"
+            src={author?.avatar!}
             alt="avatar-author"
             style={{ width: "100%" }}
           />

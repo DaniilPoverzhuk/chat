@@ -7,28 +7,26 @@ import { Box, Grid, Typography } from "@mui/material";
 
 import { useAppSelector } from "@/lib/store";
 
-interface Props {
-  isOnline?: boolean;
-}
+const User: React.FC = () => {
+  const { selectedUser, author } = useAppSelector((store) => store.user);
 
-const User: React.FC<Props> = ({ isOnline = true }) => {
-  const { selectedUser } = useAppSelector((store) => store.user);
-
-  if (!selectedUser) {
+  if (!selectedUser || selectedUser.id === author.id) {
     return <div />;
   }
+
+  console.log(selectedUser);
 
   return (
     <Box display={"flex"} gap={1}>
       <Grid item display={"flex"} className={styles.image}>
         <img
-          src={selectedUser.avatar! || "/images/avatars/avatar-1.svg"}
-          alt="user-avatar"
+          src={selectedUser.avatar}
           style={{ width: "50px", height: "50px" }}
+          alt="user-avatar"
         />
         <span
           className={clsx(styles.online, {
-            [styles.active]: isOnline,
+            [styles.active]: selectedUser.isOnline,
           })}
         />
       </Grid>

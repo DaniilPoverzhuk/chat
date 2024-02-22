@@ -9,7 +9,6 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use((config) => {
-  // console.log("request - ", config, "request data - ", config.data);
   config.headers.Authorization = CustomLocalStorage.get("accessToken");
   return config;
 });

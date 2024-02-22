@@ -33,6 +33,7 @@ interface RegistrationProps {
   email: string;
   username: string;
   password: string;
+  avatar: string;
 }
 
 export const registration = async (

@@ -20,7 +20,7 @@ class AuthService {
     return candidate;
   }
 
-  async registration({ username, email, password }) {
+  async registration({ username, email, password, avatar }) {
     const candidate = await Models.User.findOne({ where: { email } });
 
     if (candidate) {
@@ -35,7 +35,7 @@ class AuthService {
       username,
       password: passwordHash,
       email,
-      avatar: null,
+      avatar,
     });
 
     return user;

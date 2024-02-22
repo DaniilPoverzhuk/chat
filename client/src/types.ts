@@ -6,7 +6,7 @@ export interface IUser extends ID {
   username: string;
   email: string;
   password: string;
-  avatar: string | null;
+  avatar: string;
   createdAt: string;
   updatedAt: string;
   refreshToken: string;
@@ -18,6 +18,15 @@ export interface IMessage extends ID {
   value: string;
   senderId: number;
   roomId: number;
+}
+
+export interface ISocketUser {
+  socketId: string;
+  user: IUser;
+}
+
+export interface ISocketUsers {
+  [id: string]: ISocketUser;
 }
 
 export interface IDefaultResponse {

@@ -3,11 +3,13 @@ import React, { useMemo } from "react";
 import Pagination from "@/ui/Pagination";
 
 import PaginationItem from "../PaginationItem";
+import PaginationInputFile from "../PaginationInputFile";
 
 import { ID } from "@/types";
 
 interface Icon extends ID {
   src: string;
+  Component: React.ElementType;
 }
 
 interface Props {
@@ -18,84 +20,64 @@ const ModalContent: React.FC<Props> = ({ changeAvatar }) => {
   const icons = useMemo<Icon[]>(
     () => [
       {
+        id: 13,
+        src: "/images/icons/plus.svg",
+        Component: PaginationInputFile,
+      },
+      {
         id: 0,
         src: "/images/avatars/avatar-1.svg",
+        Component: PaginationItem,
       },
       {
         id: 1,
         src: "/images/avatars/avatar-2.svg",
+        Component: PaginationItem,
       },
       {
         id: 2,
         src: "/images/avatars/avatar-3.svg",
+        Component: PaginationItem,
       },
       {
         id: 3,
         src: "/images/avatars/avatar-4.svg",
+        Component: PaginationItem,
       },
       {
         id: 4,
         src: "/images/avatars/avatar-5.svg",
+        Component: PaginationItem,
       },
       {
         id: 5,
-        src: "/images/avatars/avatar-1.svg",
+        src: "/images/avatars/avatar-6.svg",
+        Component: PaginationItem,
       },
       {
         id: 6,
-        src: "/images/avatars/avatar-2.svg",
+        src: "/images/avatars/avatar-7.svg",
+        Component: PaginationItem,
       },
       {
         id: 7,
-        src: "/images/avatars/avatar-3.svg",
+        src: "/images/avatars/avatar-8.svg",
+        Component: PaginationItem,
       },
       {
         id: 8,
-        src: "/images/avatars/avatar-4.svg",
+        src: "/images/avatars/avatar-9.svg",
+        Component: PaginationItem,
       },
       {
         id: 9,
-        src: "/images/avatars/avatar-5.svg",
+        src: "/images/avatars/avatar-10.svg",
+        Component: PaginationItem,
       },
       {
         id: 10,
-        src: "/images/avatars/avatar-1.svg",
-      },
-      {
-        id: 11,
-        src: "/images/avatars/avatar-2.svg",
-      },
-      {
-        id: 12,
-        src: "/images/avatars/avatar-3.svg",
-      },
-      {
-        id: 13,
-        src: "/images/avatars/avatar-4.svg",
-      },
-      {
-        id: 14,
-        src: "/images/avatars/avatar-5.svg",
-      },
-      {
-        id: 15,
-        src: "/images/avatars/avatar-1.svg",
-      },
-      {
-        id: 16,
-        src: "/images/avatars/avatar-2.svg",
-      },
-      {
-        id: 17,
-        src: "/images/avatars/avatar-3.svg",
-      },
-      {
-        id: 18,
-        src: "/images/avatars/avatar-4.svg",
-      },
-      {
-        id: 19,
-        src: "/images/avatars/avatar-5.svg",
+        src: "/images/avatars/avatar-11.svg",
+        Component: PaginationItem,
       },
     ],
     []
@@ -114,8 +96,8 @@ const ModalContent: React.FC<Props> = ({ changeAvatar }) => {
         justifyContent: "center",
         marginTop: "20px",
       }}
-      renderItem={(item) => (
-        <PaginationItem key={item.id} {...item} onClick={changeAvatar} />
+      renderItem={({ Component, id, src }) => (
+        <Component key={id} src={src} onClick={changeAvatar} />
       )}
     />
   );

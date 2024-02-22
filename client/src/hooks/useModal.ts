@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 interface Response {
   isVisible: boolean;
@@ -9,13 +9,13 @@ interface Response {
 export default (defaultVisibility: boolean = false): Response => {
   const [isVisible, setVisible] = useState<boolean>(defaultVisibility);
 
-  const showModal = () => {
+  const showModal = useCallback(() => {
     setVisible(!isVisible);
-  };
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setVisible(false);
-  };
+  }, []);
 
   return {
     isVisible,

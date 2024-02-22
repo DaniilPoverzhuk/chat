@@ -27,7 +27,6 @@ class AuthController {
   }
 
   async login(req, res, next) {
-    console.log(req);
     try {
       ErrorService.checkError(req);
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { ToastContainer, toast } from "react-toastify";
@@ -22,16 +22,17 @@ import useModal from "@/hooks/useModal";
 
 import Modal from "@/ui/Modal";
 
-import "react-toastify/dist/ReactToastify.css";
 import ModalContent from "./ModalContent";
+import AvatarButton from "./AvatarButton";
+
+import "react-toastify/dist/ReactToastify.css";
 
 const formSchema = z
   .object({
     email: z.string().email("Некорректный email"),
     username: z.string().min(3, "Слишком короткое имя"),
-    password: z.string().min(1, "Введите пароль"),
-    confirm_password: z.string().min(1, "Введите пароль еще раз"),
-    avatar: z.string().url("Невалидная ссылка").optional(),
+    password: z.string().min(5, "Пароль должен состоять минимум из 5 символов"),
+    confirm_password: z.string().min(5, "Введите пароль еще раз"),
   })
   .refine((data) => data.password === data.confirm_password, {
     path: ["confirm_password"],
@@ -39,6 +40,8 @@ const formSchema = z
   });
 
 type FormSchema = z.infer<typeof formSchema>;
+
+const DEFAULT_AVATAR = "/images/avatars/avatar-1.svg";
 
 const Login: React.FC = () => {
   const {
@@ -49,15 +52,15 @@ const Login: React.FC = () => {
   } = useForm<FormSchema>({ resolver: zodResolver(formSchema) });
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [isLoading, setLoading] = useState<boolean>(false);
-  const [avatar, setAvatar] = useState<string>("");
   const { isVisible, showModal, closeModal } = useModal();
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [avatar, setAvatar] = useState<string>(DEFAULT_AVATAR);
 
   const onSubmit = async (formData: FormSchema) => {
     try {
-      const { data } = await AuthService.registration(formData);
+      const { data } = await AuthService.registration({ ...formData, avatar });
 
-      dispatch(setAuthor({ ...data.user, isOnline: true }));
+      dispatch(setAuthor({ ...data.user, avatar, isOnline: true }));
 
       setLoading(true);
       toast.success("Регистрация прошла успешно!");
@@ -84,6 +87,9 @@ const Login: React.FC = () => {
   return (
     <>
       <Container maxWidth="xs">
+        <Modal isVisible={isVisible} onClose={closeModal}>
+          <ModalContent changeAvatar={changeAvatar} />
+        </Modal>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid
             container
@@ -91,11 +97,7 @@ const Login: React.FC = () => {
             alignItems={"flex-start"}
             gap={2}
           >
-            {/* <AvatarField
-              {...register("avatar")}
-              avatar={avatar}
-              showModal={showModal}
-            /> */}
+            <AvatarButton showModal={showModal} src={avatar} />
             <TextField
               {...register("email")}
               fullWidth
@@ -153,9 +155,6 @@ const Login: React.FC = () => {
           </Grid>
         </form>
       </Container>
-      <Modal isVisible={isVisible} onClose={closeModal}>
-        <ModalContent changeAvatar={changeAvatar} />
-      </Modal>
       <ToastContainer />
     </>
   );

@@ -10,7 +10,7 @@ import ButtonAddGroup from "./AddGroup";
 
 import { Box, List, Typography } from "@mui/material";
 
-import { IUser } from "@/types";
+import { ISocketUsers, IUser } from "@/types";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store";
 import {
@@ -52,7 +52,7 @@ const ListUsers: React.FC<Props> = ({ search }) => {
     socket.emit("create-room", room.id);
   };
 
-  const updateOnlineUsers = (users: { [id: string]: string }) => {
+  const updateOnlineUsers = (users: ISocketUsers) => {
     dispatch(updateOnlineStatus(users));
   };
 
@@ -64,7 +64,7 @@ const ListUsers: React.FC<Props> = ({ search }) => {
     }
 
     socket.on("get-online-users", (users) => {
-      console.log(users);
+      console.log(users, "- get-online-users");
       updateOnlineUsers(users);
     });
 

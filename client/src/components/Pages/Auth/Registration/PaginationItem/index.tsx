@@ -16,7 +16,7 @@ const PaginationItem = ({ src, onClick }: Props) => {
           type="button"
           onClick={() => onClick(src)}
           className={styles.listItemAvatar}
-          style={{ display: "flex", padding: "0px" }}
+          style={{ display: "flex" }}
         >
           <img src={src} width={"100%"} />
         </button>

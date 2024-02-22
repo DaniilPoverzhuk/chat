@@ -50,14 +50,14 @@ const getOnlineUsers = (io) => {
 
 io.on("connection", (socket) => {
   socket.on("add-user", (user) => {
-    users[user.id] = socket.id;
+    users[user.id] = { socketId: socket.id, user };
 
     getOnlineUsers(io);
   });
 
   socket.on("disconnect", () => {
-    for (const [key, value] of Object.entries(users)) {
-      if (value === socket.id) {
+    for (const [key, { socketId }] of Object.entries(users)) {
+      if (socketId === socket.id) {
         delete users[key];
       }
     }

@@ -24,8 +24,6 @@ class MessageController {
 
   async getAll(req, res, next) {
     try {
-      console.log(req.body, "- REQ BODY GET_ALL MESSAGES");
-
       ErrorService.checkError(req);
 
       const messages = await MessageService.getAll(req.body.roomId);

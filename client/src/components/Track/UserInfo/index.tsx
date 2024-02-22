@@ -1,14 +1,11 @@
 import React from "react";
 
-import User from "./User";
 import { Box, Grid } from "@mui/material";
+
+import User from "./User";
 import Abilities from "./Abilities";
 
-interface Props {
-  isOnline?: boolean;
-}
-
-const UserInfo: React.FC<Props> = ({ isOnline = true }) => {
+const UserInfo: React.FC = () => {
   return (
     <Box boxShadow={"0 0 4px 0 rgba(34,60,80,.2)"} display={"flex"} padding={1}>
       <Grid
@@ -17,7 +14,7 @@ const UserInfo: React.FC<Props> = ({ isOnline = true }) => {
         justifyContent={"space-between"}
         alignItems={"center"}
       >
-        <User isOnline={isOnline} />
+        <User />
         <Abilities />
       </Grid>
     </Box>
