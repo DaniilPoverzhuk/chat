@@ -71,6 +71,8 @@ io.on("connection", (socket) => {
 
   socket.on("send-message", (message) => {
     io.emit(message.roomId, message);
+
+    io.emit(`get-last-message-${message.roomId}`, message);
   });
 });
 
@@ -89,7 +91,7 @@ app.post("/message/save", authMiddleware, MessageValidation.save(), MessageContr
 app.post("/message/getAll", authMiddleware, MessageValidation.getAll(), MessageController.getAll);
 app.post(
   "/message/getLast",
-  // authMiddleware,
+  authMiddleware,
   MessageValidation.getLast(),
   MessageController.getLast
 );

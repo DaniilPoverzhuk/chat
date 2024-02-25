@@ -1,4 +1,5 @@
 const Models = require("../models/index.js");
+const dto = require("../dto/index.js");
 
 exports.save = async (payload) => {
   try {
@@ -23,10 +24,16 @@ exports.getAll = async (roomId) => {
 exports.getLast = async (roomId) => {
   try {
     const messages = await Models.Message.findAll({ where: { roomId } });
+
+    if (!messages.length) {
+      return "";
+    }
+
     const lastMessage = messages.at(-1);
 
-    return lastMessage;
-  } catch (error) {
+    return dto(lastMessage);
+  } catch (err) {
+    console.log(err);
     return null;
   }
 };

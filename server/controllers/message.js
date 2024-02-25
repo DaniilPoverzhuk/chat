@@ -53,9 +53,9 @@ class MessageController {
         throw new ApiError().BadRequest("Ошибка при получении последнего сообщения");
       }
 
-      const lastMessage = dto(await MessageService.getLast(room.id));
+      const lastMessage = await MessageService.getLast(room.id);
 
-      if (!lastMessage) {
+      if (!lastMessage && typeof lastMessage !== "string") {
         throw new ApiError().BadRequest("Ошибка при получении последнего сообщения");
       }
 
