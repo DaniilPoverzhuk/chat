@@ -1,6 +1,8 @@
 const ApiError = require("../error/errorHandler.js");
 const ErrorService = require("../services/error.js");
 const MessageService = require("../services/message.js");
+const RoomService = require("../services/room.js");
+const dto = require("../dto/index.js");
 
 class MessageController {
   async save(req, res, next) {
@@ -35,6 +37,31 @@ class MessageController {
       return res.status(200).json({
         message: "Messages have been received successfully",
         messages,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getLast(req, res, next) {
+    try {
+      ErrorService.checkError(req);
+
+      const room = await RoomService.get(req.body);
+
+      if (!room) {
+        throw new ApiError().BadRequest("Ошибка при получении последнего сообщения");
+      }
+
+      const lastMessage = dto(await MessageService.getLast(room.id));
+
+      if (!lastMessage) {
+        throw new ApiError().BadRequest("Ошибка при получении последнего сообщения");
+      }
+
+      return res.status(200).json({
+        message: "Last message was received successfully",
+        value: lastMessage,
       });
     } catch (err) {
       next(err);

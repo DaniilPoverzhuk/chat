@@ -19,3 +19,14 @@ exports.getAll = async (roomId) => {
     return null;
   }
 };
+
+exports.getLast = async (roomId) => {
+  try {
+    const messages = await Models.Message.findAll({ where: { roomId } });
+    const lastMessage = messages.at(-1);
+
+    return lastMessage;
+  } catch (error) {
+    return null;
+  }
+};

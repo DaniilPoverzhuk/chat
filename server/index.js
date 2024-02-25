@@ -87,6 +87,12 @@ app.get("/rooms/:id", authMiddleware, RoomValidation.getById(), RoomController.g
 
 app.post("/message/save", authMiddleware, MessageValidation.save(), MessageController.save);
 app.post("/message/getAll", authMiddleware, MessageValidation.getAll(), MessageController.getAll);
+app.post(
+  "/message/getLast",
+  // authMiddleware,
+  MessageValidation.getLast(),
+  MessageController.getLast
+);
 
 app.get("/token/update", TokenController.update);
 app.get("/token/check", TokenController.check);

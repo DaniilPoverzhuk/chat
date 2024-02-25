@@ -7,3 +7,8 @@ exports.save = () => [
 ];
 
 exports.getAll = () => [body("roomId").isNumeric().withMessage("Обязательное поле")];
+
+exports.getLast = () => [
+  body("senderId").isNumeric().withMessage("Обязательное поле"),
+  body("getterId").isNumeric().withMessage("Обязательное поле"),
+];

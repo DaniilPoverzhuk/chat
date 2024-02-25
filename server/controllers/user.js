@@ -1,5 +1,4 @@
 const ErrorService = require("../services/error.js");
-const UserService = require("../services/user.js");
 
 const dto = require("../dto/index.js");
 
