@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 
 import Author from "./Author";
 import Search from "./Search";
 import ListUsers from "./ListUsers";
 
 import debounce from "lodash.debounce";
+import ButtonAdd from "./ButtonAdd";
 
 const Sidebar: React.FC = () => {
   const [search, setSearch] = useState<string>("");
@@ -21,6 +22,19 @@ const Sidebar: React.FC = () => {
         <Author />
         <Search onChange={setSearchHandler} />
       </Box>
+      <Grid
+        container
+        display={"grid"}
+        gridTemplateColumns={"1fr 1fr"}
+        marginTop={2}
+      >
+        <Grid item>
+          <ButtonAdd label="Добавить группу" />
+        </Grid>
+        <Grid item>
+          <ButtonAdd label="Добавить друга" />
+        </Grid>
+      </Grid>
       <ListUsers search={search} />
     </>
   );

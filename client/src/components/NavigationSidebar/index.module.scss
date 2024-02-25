@@ -1,0 +1,15 @@
+.button {
+  width: 100%;
+  position: relative;
+  padding: 10px 0;
+
+  &::after {
+    content: "";
+
+    background-color: #bebebe;
+    opacity: 0.075;
+
+    position: absolute;
+    inset: 0;
+  }
+}

@@ -1,16 +1,19 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+
 import { ISocketUsers, IUser } from "@/types";
+
 import CustomLocalStorage from "@/utils/CustomLocalStorage";
+import isExists from "@/utils/isExists";
 
 interface InitialState {
-  author: IUser;
-  selectedUser: IUser;
+  author: IUser | null;
+  selectedUser: IUser | null;
   users: IUser[] | [];
 }
 
 const initialState: InitialState = {
-  author: CustomLocalStorage.get<IUser>("author"),
-  selectedUser: CustomLocalStorage.get<IUser>("selectedUser"),
+  author: CustomLocalStorage.get("author"),
+  selectedUser: CustomLocalStorage.get("selectedUser"),
   users: [],
 };
 
@@ -33,29 +36,37 @@ const UserSlice = createSlice({
       state: InitialState,
       action: PayloadAction<ISocketUsers>
     ) => {
-      const idsOnlineUsers = Object.keys(action.payload);
+      const onlineSocketUsers = Object.values(action.payload).filter(
+        ({ user }) => state.author!.id !== user.id
+      );
+      const onlineUsers = onlineSocketUsers.map(({ user }) => user);
 
-      console.log(idsOnlineUsers, "- array of id online users");
+      onlineUsers.forEach((user) => {
+        const isExistsUser = isExists<IUser>(state.users, user, "id");
+
+        if (!isExistsUser) {
+          (state.users as IUser[]).unshift(user);
+        }
+      });
 
       state.users = state.users.map((user) => {
         user.isOnline = false;
 
-        console.log(
-          state.author.id === user.id
-            ? `${state.author.id} - id author`
-            : `${user.id} - id user`
-        );
+        const isOnlineUser = isExists<IUser>(onlineUsers, user, "id");
 
-        if (idsOnlineUsers.includes(user.id?.toString()!)) {
-          console.log(user.id, "- id online user");
+        if (isOnlineUser) {
           user.isOnline = true;
         }
 
         return user;
       });
 
-      state.selectedUser.isOnline = idsOnlineUsers.includes(
-        state.selectedUser.id!?.toString()
+      if (!state.selectedUser) return;
+
+      state.selectedUser.isOnline = isExists<IUser>(
+        onlineUsers,
+        state.selectedUser,
+        "id"
       );
 
       CustomLocalStorage.set(state.selectedUser, "selectedUser");

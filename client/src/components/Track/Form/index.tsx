@@ -11,8 +11,8 @@ import { useAppSelector } from "@/lib/store";
 
 import * as MessageService from "@/service/message";
 
-import { socket } from "@/pages/home";
 import { IMessage } from "@/types";
+import useSocket from "@/hooks/useSocket";
 
 const formSchema = z.object({
   message: z.string().min(1),
@@ -22,6 +22,7 @@ const formSchema = z.object({
 type TypeFormSchema = z.infer<typeof formSchema>;
 
 const Form: React.FC = () => {
+  const socket = useSocket();
   const { register, handleSubmit, reset } = useForm<TypeFormSchema>({
     resolver: zodResolver(formSchema),
   });
@@ -30,7 +31,7 @@ const Form: React.FC = () => {
   const sendMessage: SubmitHandler<TypeFormSchema> = async (data) => {
     const message = {
       value: data.message,
-      senderId: user.author.id!,
+      senderId: user.author!.id!,
       roomId: room.data?.id!,
     } as IMessage;
 

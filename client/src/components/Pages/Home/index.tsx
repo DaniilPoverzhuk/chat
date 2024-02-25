@@ -1,11 +1,16 @@
 import React from "react";
 
-import { Box, Container, Grid } from "@mui/material";
+import { Box, Container, Grid, Typography } from "@mui/material";
+
+import { useAppSelector } from "@/lib/store";
 
 import Track from "@/components/Track";
-import Sidebar from "@/components/Sidebar";
+import ProfileSidebar from "@/components/ProfileSidebar";
+import NavigationSidebar from "@/components/NavigationSidebar";
 
 const Home: React.FC = () => {
+  const { selectedUser } = useAppSelector((store) => store.user);
+
   return (
     <Container maxWidth="lg" sx={{ height: "100%" }}>
       <Box
@@ -13,8 +18,12 @@ const Home: React.FC = () => {
         padding={"0"}
         borderRadius={1.5}
         height={"100%"}
+        minHeight={"55vh"}
       >
-        <Grid height={["100%"]} container>
+        <Grid minHeight={"55vh"} container>
+          <Grid item xs={1}>
+            <NavigationSidebar />
+          </Grid>
           <Grid
             item
             xs={4}
@@ -27,11 +36,24 @@ const Home: React.FC = () => {
               direction={"column"}
               height={"100%"}
             >
-              <Sidebar />
+              <ProfileSidebar />
             </Grid>
           </Grid>
-          <Grid item xs={8}>
-            <Track />
+          <Grid item xs={7} position={"relative"}>
+            {selectedUser ? (
+              <Track />
+            ) : (
+              <Typography
+                fontStyle={"italic"}
+                position={"absolute"}
+                left={"50%"}
+                top={"50%"}
+                fontWeight={"500"}
+                sx={{ transform: "translate(-50%, -50%)" }}
+              >
+                Выберите чат для переписки
+              </Typography>
+            )}
           </Grid>
         </Grid>
       </Box>

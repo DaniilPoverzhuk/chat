@@ -10,11 +10,9 @@ import { useAppSelector } from "@/lib/store";
 const User: React.FC = () => {
   const { selectedUser, author } = useAppSelector((store) => store.user);
 
-  if (!selectedUser || selectedUser.id === author.id) {
+  if (!selectedUser || selectedUser.id === author!?.id) {
     return <div />;
   }
-
-  console.log(selectedUser);
 
   return (
     <Box display={"flex"} gap={1}>

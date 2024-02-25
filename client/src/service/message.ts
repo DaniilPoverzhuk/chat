@@ -32,3 +32,25 @@ export const getAll = async (
 
   return response;
 };
+
+interface GetLastResponse {
+  message: string;
+  value: IMessage;
+}
+
+interface PropsGetLast {
+  senderId: number;
+  getterId: number;
+}
+
+export const getLast = async (
+  data: PropsGetLast
+): Promise<AxiosResponse<GetLastResponse>> => {
+  const response = await instance<GetLastResponse>({
+    method: "post",
+    url: "/message/getLast",
+    data,
+  });
+
+  return response;
+};

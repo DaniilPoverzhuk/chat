@@ -33,7 +33,6 @@ const ListMessages: React.FC = () => {
     if (!room?.id) return;
 
     socket.on(room!.id.toString()!, (message: IMessage) => {
-      console.log(messages);
       setMessages([message, ...messages]);
     });
   }, [room, messages]);

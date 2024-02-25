@@ -6,7 +6,7 @@ import styles from "./index.module.scss";
 import CustomLocalStorage from "@/utils/CustomLocalStorage";
 
 import User from "./User";
-import ButtonAddGroup from "./AddGroup";
+import ButtonAddGroup from "../ButtonAdd";
 
 import { Box, List, Typography } from "@mui/material";
 
@@ -28,10 +28,22 @@ interface Props {
   search: string;
 }
 
+const EMPTY_LIST_STYLES = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  textAlign: "center",
+  color: "#BDBDBD",
+  whiteSpace: "nowrap",
+};
+
 const ListUsers: React.FC<Props> = ({ search }) => {
   const dispatch = useAppDispatch();
   const socket = useSocket();
-  const { author, selectedUser, users } = useAppSelector((store) => store.user);
+  const {
+    user: { author, selectedUser, users },
+  } = useAppSelector((store) => store);
   const [filteredUsers, setFilteredUsers] = useState<IUser[]>([]);
 
   const setSelectedUserHandler = async (
@@ -41,7 +53,7 @@ const ListUsers: React.FC<Props> = ({ search }) => {
     if (isSelected) return;
 
     const { data } = await RoomService.get({
-      senderId: author.id!,
+      senderId: author!.id!,
       getterId: selectedUser.id!,
     });
     const room = data.room;
@@ -57,14 +69,7 @@ const ListUsers: React.FC<Props> = ({ search }) => {
   };
 
   useEffect(() => {
-    const room = CustomLocalStorage.get<IRoom>("currentRoom");
-
-    if (room) {
-      socket.emit("create-room", room.id);
-    }
-
     socket.on("get-online-users", (users) => {
-      console.log(users, "- get-online-users");
       updateOnlineUsers(users);
     });
 
@@ -72,10 +77,14 @@ const ListUsers: React.FC<Props> = ({ search }) => {
   }, [socket]);
 
   useEffect(() => {
+    if (!author) return;
+
     socket.emit("add-user", author);
   }, [author, socket]);
 
   useEffect(() => {
+    if (!users.length) return;
+
     setFilteredUsers(users.filter((user) => user.username.includes(search)));
   }, [search, users]);
 
@@ -85,34 +94,37 @@ const ListUsers: React.FC<Props> = ({ search }) => {
     dispatch(setUsers(response.data.users));
   };
 
+  const getListContent = () => {
+    if (!users.length) {
+      return (
+        <Typography sx={EMPTY_LIST_STYLES}>Добавьте друзей! 😏</Typography>
+      );
+    }
+
+    if (!filteredUsers.length) {
+      return (
+        <Typography sx={EMPTY_LIST_STYLES}>
+          Таких пользователей нет 😥
+        </Typography>
+      );
+    }
+
+    return filteredUsers.map((user) => {
+      return (
+        <User
+          key={user.id}
+          onClick={(isActive) => setSelectedUserHandler(user, isActive)}
+          isActive={user?.id === selectedUser?.id}
+          {...user}
+        />
+      );
+    });
+  };
+
   return (
     <Box className={styles.root} width={"100%"} sx={{ flexGrow: 1 }}>
       <List sx={{ height: "100%", position: "relative" }}>
-        <ButtonAddGroup />
-        {!Boolean(filteredUsers.length) && (
-          <Typography
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              textAlign: "center",
-              color: "#BDBDBD",
-              whiteSpace: "nowrap",
-            }}
-          >
-            Таких пользователей нет 😥
-          </Typography>
-        )}
-        {filteredUsers.map((user) => (
-          <User
-            key={user.id}
-            last_message="message"
-            onClick={(isActive) => setSelectedUserHandler(user, isActive)}
-            isActive={user?.id === selectedUser?.id}
-            {...user}
-          />
-        ))}
+        {getListContent()}
       </List>
     </Box>
   );

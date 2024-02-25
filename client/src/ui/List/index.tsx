@@ -1,6 +1,4 @@
-import isNumber from "@/utils/isNumber";
-import React, { useMemo } from "react";
-import ReactDOM from "react-dom/client";
+import React from "react";
 
 type TypeDirection = "row" | "column" | "row-reverse" | "column-reverse";
 
