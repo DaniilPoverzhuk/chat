@@ -66,9 +66,13 @@ class AuthController {
     }
   }
 
-  async logout(req, res, next) {
+  async logout(_, res, next) {
     try {
-      ErrorService.checkError(req);
+      res.clearCookie();
+
+      return res.status(200).json({
+        message: "User has successfully logged out",
+      });
     } catch (err) {
       next(err);
     }

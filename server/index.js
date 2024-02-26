@@ -78,8 +78,8 @@ io.on("connection", (socket) => {
 
 app.post("/auth/login", AuthValidation.login(), AuthController.login);
 app.post("/auth/registration", AuthValidation.registration(), AuthController.registration);
+app.get("/auth/logout", AuthController.logout);
 app.get("/auth/me", AuthValidation.me(), AuthController.getMe);
-// app.get("/auth/logout", AuthValidation.logout(), AuthController.logout);
 
 app.post("/users", authMiddleware, UserValidation.getAll(), UserController.getAll);
 app.post("/users/friends/get", UserValidation.getAllFriends(), UserController.getAllFriends);
