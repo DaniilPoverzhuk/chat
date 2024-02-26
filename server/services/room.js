@@ -46,3 +46,13 @@ exports.getById = async (id) => {
     return null;
   }
 };
+
+exports.createGroup = async (name, users = [], avatar = null) => {
+  try {
+    const group = await Models.Room.create({ name, users, avatar });
+
+    return group;
+  } catch (err) {
+    return null;
+  }
+};

@@ -6,3 +6,9 @@ exports.get = () => [
 ];
 
 exports.getById = () => body("roomId").isNumeric().withMessage("Обязательное поле");
+
+exports.createGroup = () => [
+  body("name").isString().withMessage("Обязательное поле"),
+  body("avatar").isString().optional(),
+  body("users").isJSON().optional(),
+];

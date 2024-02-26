@@ -37,6 +37,28 @@ class RoomController {
       next(err);
     }
   }
+
+  async createGroup(req, res, next) {
+    try {
+      ErrorService.checkError(req);
+
+      const { name, users } = req.body;
+
+      const group = await RoomService.createGroup(name, users);
+
+      if (!group) {
+        console.log(group);
+        throw new ApiError().BadRequest("При создании группы произошла ошибка");
+      }
+
+      return res.status(200).json({
+        message: "Group was successfully created",
+        group,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = new RoomController();

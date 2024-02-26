@@ -85,6 +85,7 @@ app.post("/users", authMiddleware, UserValidation.getAll(), UserController.getAl
 app.post("/users/friends/get", UserValidation.getAllFriends(), UserController.getAllFriends);
 
 app.post("/rooms/get", authMiddleware, RoomValidation.get(), RoomController.get);
+app.post("/rooms/create-group", RoomValidation.createGroup(), RoomController.createGroup);
 app.get("/rooms/:id", authMiddleware, RoomValidation.getById(), RoomController.getById);
 
 app.post("/message/save", authMiddleware, MessageValidation.save(), MessageController.save);
