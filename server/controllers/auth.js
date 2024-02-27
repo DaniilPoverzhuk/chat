@@ -8,7 +8,7 @@ const dto = require("../dto/index.js");
 class AuthController {
   async getMe(req, res, next) {
     try {
-      ErrorService.checkError(req);
+      ErrorService.check(req);
 
       const { email } = req.body;
       const user = await Models.User.findOne({ where: { email } });
@@ -28,7 +28,7 @@ class AuthController {
 
   async login(req, res, next) {
     try {
-      ErrorService.checkError(req);
+      ErrorService.check(req);
 
       const user = dto(await AuthService.login(req.body));
       const tokens = await TokenService.generateTokens(user);
@@ -48,7 +48,7 @@ class AuthController {
 
   async registration(req, res, next) {
     try {
-      ErrorService.checkError(req);
+      ErrorService.check(req);
 
       const user = dto(await AuthService.registration(req.body));
       const tokens = await TokenService.generateTokens(user);

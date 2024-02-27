@@ -47,9 +47,19 @@ exports.getById = async (id) => {
   }
 };
 
+exports.getCommunities = async () => {
+  try {
+    const communities = await Models.Room.findAll({ where: { isCommunity: true } });
+
+    return communities;
+  } catch (err) {
+    return null;
+  }
+};
+
 exports.createGroup = async (name, users = [], avatar = null) => {
   try {
-    const group = await Models.Room.create({ name, users, avatar });
+    const group = await Models.Room.create({ name, users, avatar, isCommunity: true });
 
     return group;
   } catch (err) {

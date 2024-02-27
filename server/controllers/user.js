@@ -10,7 +10,7 @@ const ApiError = require("../error/errorHandler.js");
 class UserController {
   async getAll(req, res, next) {
     try {
-      ErrorService.checkError(req);
+      ErrorService.check(req);
 
       const { email } = req.body;
 
@@ -33,7 +33,7 @@ class UserController {
 
   async getAllFriends(req, res, next) {
     try {
-      ErrorService.checkError(req);
+      ErrorService.check(req);
 
       const { email } = req.body;
       const user = dto(await Models.User.findOne({ where: { email } }));

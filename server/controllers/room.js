@@ -1,12 +1,12 @@
 const ErrorService = require("../services/error.js");
 const RoomService = require("../services/room.js");
-const Models = require("../models/index.js");
+
 const ApiError = require("../error/errorHandler.js");
 
 class RoomController {
   async get(req, res, next) {
     try {
-      ErrorService.checkError(req);
+      ErrorService.check(req);
 
       const room = await RoomService.get(req.body);
 
@@ -21,7 +21,7 @@ class RoomController {
 
   async getById(req, res, next) {
     try {
-      ErrorService.checkError(req);
+      ErrorService.check(req);
 
       const room = RoomService.getById(req.body.roomId);
 
@@ -38,9 +38,28 @@ class RoomController {
     }
   }
 
+  async getCommunities(req, res, next) {
+    try {
+      ErrorService.check(req);
+
+      const communities = await RoomService.getCommunities();
+
+      if (!communities) {
+        throw new ApiError().BadRequest("При получении сообществ произошла ошибка :(");
+      }
+
+      return res.status(200).json({
+        message: "Communities have been successfully received",
+        communities,
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async createGroup(req, res, next) {
     try {
-      ErrorService.checkError(req);
+      ErrorService.check(req);
 
       const { name, users } = req.body;
 

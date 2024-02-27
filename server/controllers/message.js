@@ -7,7 +7,7 @@ const dto = require("../dto/index.js");
 class MessageController {
   async save(req, res, next) {
     try {
-      ErrorService.checkError(req);
+      ErrorService.check(req);
 
       const message = await MessageService.save(req.body);
 
@@ -26,7 +26,7 @@ class MessageController {
 
   async getAll(req, res, next) {
     try {
-      ErrorService.checkError(req);
+      ErrorService.check(req);
 
       const messages = await MessageService.getAll(req.body.roomId);
 
@@ -45,7 +45,7 @@ class MessageController {
 
   async getLast(req, res, next) {
     try {
-      ErrorService.checkError(req);
+      ErrorService.check(req);
 
       const room = await RoomService.get(req.body);
 
