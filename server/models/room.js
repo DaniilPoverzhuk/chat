@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       users: DataTypes.JSON,
       name: DataTypes.STRING,
       avatar: DataTypes.STRING,
+      isCommunity: DataTypes.BOOLEAN,
     },
     {
       sequelize,
