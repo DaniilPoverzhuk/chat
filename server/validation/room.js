@@ -9,6 +9,7 @@ exports.getById = () => body("roomId").isNumeric().withMessage("Обязател
 
 exports.createGroup = () => [
   body("name").isString().withMessage("Обязательное поле"),
+  body("authorId").isString(),
   body("avatar").isString().optional(),
   body("users").isJSON().optional(),
 ];

@@ -5,12 +5,14 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const { Server } = require("socket.io");
 const { createServer } = require("http");
+const multer = require("multer");
 
 const AuthController = require("./controllers/auth.js");
 const UserController = require("./controllers/user.js");
 const TokenController = require("./controllers/token.js");
 const RoomController = require("./controllers/room.js");
 const MessageController = require("./controllers/message.js");
+const UploadController = require("./controllers/upload.js");
 
 const AuthValidation = require("./validation/auth.js");
 const RoomValidation = require("./validation/room.js");
@@ -22,25 +24,31 @@ const authMiddleware = require("./middlewares/auth.js");
 
 dotenv.config();
 
+const storage = multer.diskStorage({
+  destination: function (_, __, cb) {
+    cb(null, "uploads/images");
+  },
+  filename: function (_, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+const upload = multer({ storage });
+
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
     origin: process.env.CLIENT_URL,
     credentials: true,
-    methods: ["GET", "POST"],
   },
 });
 const PORT = process.env.PORT || 5001;
 
-app.use(express.json());
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-);
+app.use(bodyParser.json({ limit: "500bm" }));
+app.use(bodyParser.urlencoded({ limit: "500mb", extended: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET_KEY));
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+app.use("/uploads/images", express.static("uploads/images"));
 
 const users = {};
 
@@ -64,10 +72,6 @@ io.on("connection", (socket) => {
 
     getOnlineUsers(io);
   });
-
-  // socket.on("create-room", (roomId) => {
-  //   if (!socket.rooms[roomId]) socket.join(roomId);
-  // });
 
   socket.on("send-message", (message) => {
     io.emit(message.roomId, message);
@@ -100,6 +104,8 @@ app.post(
 
 app.get("/token/update", TokenController.update);
 app.get("/token/check", TokenController.check);
+
+app.post("/upload/image", upload.single("avatar"), UploadController.image);
 
 app.use(errorMiddleware);
 
