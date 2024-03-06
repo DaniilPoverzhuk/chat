@@ -8,16 +8,15 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      User.hasOne(models.Token, { foreignKey: { name: "user_id" } });
     }
   }
   User.init(
     {
       username: DataTypes.STRING,
-      email: DataTypes.STRING,
       password: DataTypes.STRING,
+      email: DataTypes.STRING,
       avatar: DataTypes.STRING,
-      friends: DataTypes.JSON,
     },
     {
       sequelize,

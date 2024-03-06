@@ -1,34 +1,23 @@
+const { User } = require("../models/index.js");
 const { Op } = require("sequelize");
-const Models = require("../models/index.js");
 
-exports.getAllOnline = async (email) => {
+exports.delete = async (email) => {
   try {
-    const users = await Models.OnlineUser.find({
-      where: {
-        [Op.not]: {
-          email,
-        },
-      },
-    });
+    const deletedUser = await User.destroy({ where: { email } });
 
-    return users;
+    return deletedUser;
   } catch (err) {
     return null;
   }
 };
 
-exports.changeStatus = async ({ userId }) => {
+exports.getAll = async (email) => {
   try {
-    const user = await Models.OnlineUser.findOne({ where: { user_id: userId } });
+    const users = await User.findAll({ where: { [Op.not]: { email } } });
 
-    if (user) {
-      await user.destroy();
-    } else {
-      await Models.OnlineUser.create({ user_id: userId });
-    }
-
-    return true;
+    return users;
   } catch (err) {
+    console.log("UserService.getAll error - ", err);
     return null;
   }
 };

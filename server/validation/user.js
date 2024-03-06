@@ -1,9 +1,9 @@
 const { body } = require("express-validator");
 
-exports.getAll = () => [body("email").isEmail().withMessage("Невалидный email")];
-
-exports.getAllOnline = () => [body("email").isEmail().withMessage("Невалидный email")];
-
-exports.getAllFriends = () => [body("email").isEmail().withMessage("Невалидный email")];
-
-exports.changeStatus = () => [body("userId").isNumeric().withMessage("Обязательное поле")];
+exports.getAll = () => [
+  body("email")
+    .exists()
+    .withMessage("Required field")
+    .isEmail()
+    .withMessage("this field should be email"),
+];

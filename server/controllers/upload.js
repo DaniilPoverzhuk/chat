@@ -1,16 +1,17 @@
-const ApiError = require("../error/errorHandler");
-
 class UploadController {
-  async image(req, res, next) {
+  avatar(req, res, next) {
+    console.log(req.file);
     try {
-      console.log(req.file);
       if (!req.file) {
-        throw new ApiError().BadRequest("При загрузке изображение произошла ошибка");
+        throw new ApiError().BadRequest(
+          "При загрузке изображение произошла ошибка"
+        );
       }
-      const src = `uploads/images/${req.file.originalname}`;
+
+      const src = `uploads/avatar/${req.file.originalname}`;
 
       return res.status(200).json({
-        message: "Image has been uploaded successfully",
+        message: "Изображение было успешно загружено",
         src,
       });
     } catch (err) {

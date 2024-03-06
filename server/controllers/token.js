@@ -1,5 +1,5 @@
 const TokenService = require("../services/token.js");
-const ApiError = require("../error/errorHandler.js");
+const ApiError = require("../error/handler.js");
 
 class TokenController {
   async update(req, res, next) {
@@ -7,23 +7,24 @@ class TokenController {
       const refreshToken = TokenService.getRefreshTokenFromCookie(req);
 
       if (!refreshToken || refreshToken === "null") {
-        throw new ApiError().UnauthorizedError();
+        throw new ApiError().Unauthorized();
       }
 
-      const { exp, iat, ...user } = TokenService.isValidRefreshToken(refreshToken);
+      const { exp, iat, ...user } =
+        TokenService.isValidRefreshToken(refreshToken);
 
       if (!user) {
-        throw new ApiError().UnauthorizedError();
+        throw new ApiError().Unauthorized();
       }
 
-      const tokens = await TokenService.generateTokens(user);
+      const tokens = TokenService.generate(user);
 
-      await TokenService.saveToken(user.id, tokens);
+      await TokenService.save(user.id, tokens);
 
-      res.cookie("refreshToken", tokens.refreshToken);
+      res.cookie(process.env.COOKIE_REFRESH_TOKEN_KEY, tokens.refreshToken);
 
       return res.status(200).json({
-        message: "Token has been successfully updated",
+        message: "Токен был успешно обновлен",
         user: {
           ...user,
           ...tokens,
@@ -39,7 +40,7 @@ class TokenController {
       const accessToken = req.headers?.authorization;
 
       if (!accessToken || accessToken === "null") {
-        throw new ApiError().UnauthorizedError();
+        throw new ApiError().Unauthorized();
       }
 
       const isValidAccessToken = TokenService.isValidAccessToken(accessToken);
@@ -48,22 +49,23 @@ class TokenController {
         const refreshToken = TokenService.getRefreshTokenFromCookie(req);
 
         if (!refreshToken) {
-          throw new ApiError().UnauthorizedError();
+          throw new ApiError().Unauthorized();
         }
 
-        const isValidRefreshToken = TokenService.isValidRefreshToken(refreshToken);
+        const isValidRefreshToken =
+          TokenService.isValidRefreshToken(refreshToken);
 
         if (!isValidRefreshToken) {
-          throw new ApiError().UnauthorizedError();
+          throw new ApiError().Unauthorized();
         }
 
         const { exp, iat, ...user } = isValidRefreshToken;
-        const tokens = await TokenService.generateTokens(user);
+        const tokens = TokenService.generate(user);
 
-        await TokenService.saveToken(user.id, tokens);
+        await TokenService.save(tokens, user.id);
 
         return res.status(200).json({
-          message: "Tokens have been updated",
+          message: "Токены были обновлены",
           user: { ...user, ...tokens },
         });
       }
@@ -72,7 +74,7 @@ class TokenController {
       const user = { ...isValidAccessToken, accessToken, refreshToken };
 
       return res.status(200).json({
-        message: "Token is valid",
+        message: "Токен валидный",
         user,
       });
     } catch (err) {

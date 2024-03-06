@@ -1,46 +1,39 @@
 const bcrypt = require("bcrypt");
 
-const Models = require("../models/index.js");
-const ApiError = require("../error/errorHandler.js");
+const dto = require("../dto/index.js");
+const ApiError = require("../error/handler");
+const { User } = require("../models/index.js");
 
-class AuthService {
-  async login({ email, password }) {
-    const candidate = await Models.User.findOne({ where: { email } });
+exports.login = async ({ email, password }) => {
+  const user = dto(await User.findOne({ where: { email } }));
 
-    if (!candidate) {
-      throw new ApiError().BadRequest("Такой пользователь не зарегестрирован");
-    }
-
-    const isValidPassword = await bcrypt.compare(password, candidate.password);
-
-    if (!isValidPassword) {
-      throw new ApiError().BadRequest("Неверный логин или пароль");
-    }
-
-    return candidate;
+  if (!user) {
+    throw new ApiError().BadRequest("Такой пользователь не зарегестрирован");
   }
 
-  async registration({ username, email, password, avatar }) {
-    const candidate = await Models.User.findOne({ where: { email } });
+  const isValidPassword = await bcrypt.compare(password, user.password);
 
-    if (candidate) {
-      throw new ApiError().BadRequest("Такой пользователь уже зарегестрирован");
-    }
-
-    const saltRounds = 10;
-    const salt = bcrypt.genSaltSync(saltRounds);
-    const passwordHash = bcrypt.hashSync(password, salt);
-
-    const user = await Models.User.create({
-      username,
-      password: passwordHash,
-      email,
-      avatar,
-      friends: [],
-    });
-
-    return user;
+  if (!isValidPassword) {
+    throw new ApiError().BadRequest("Неверный логин или пароль");
   }
-}
 
-module.exports = new AuthService();
+  return user;
+};
+
+exports.registration = async (body) => {
+  const user = await User.findOne({
+    where: { email: body.email },
+  });
+
+  if (user) {
+    throw new ApiError().BadRequest("Такой пользователь уже зарагестрирован");
+  }
+
+  const saltRounds = 10;
+  const salt = bcrypt.genSaltSync(saltRounds);
+  const passwordHash = bcrypt.hashSync(body.password, salt);
+
+  const newUser = dto(await User.create({ ...body, password: passwordHash }));
+
+  return newUser;
+};

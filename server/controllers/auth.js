@@ -1,44 +1,39 @@
-const ErrorService = require("../services/error.js");
+const checkValidateRequest = require("../utils/checkValidateRequest.js");
+
+const ApiError = require("../error/handler.js");
+
 const AuthService = require("../services/auth.js");
 const TokenService = require("../services/token.js");
-const Models = require("../models/index.js");
-const ApiError = require("../error/errorHandler.js");
-const dto = require("../dto/index.js");
+const UserService = require("../services/user.js");
+const CookieService = require("../services/cookie.js");
 
 class AuthController {
-  async getMe(req, res, next) {
-    try {
-      ErrorService.check(req);
-
-      const { email } = req.body;
-      const user = await Models.User.findOne({ where: { email } });
-
-      if (!user) {
-        throw new ApiError().UnauthorizedError();
-      }
-
-      return res.status(200).json({
-        message: "User was successfully received",
-        user,
-      });
-    } catch (err) {
-      next(err);
-    }
-  }
-
   async login(req, res, next) {
     try {
-      ErrorService.check(req);
+      checkValidateRequest(req);
 
-      const user = dto(await AuthService.login(req.body));
-      const tokens = await TokenService.generateTokens(user);
+      const user = await AuthService.login(req.body);
 
-      await TokenService.saveToken(user.id, tokens);
+      if (!user) {
+        throw new ApiError().BadRequest("При аутентификации произошла ошибка");
+      }
 
-      res.cookie("refreshToken", tokens.refreshToken);
+      const tokens = TokenService.generate(req.body);
+
+      if (!tokens) {
+        throw new ApiError().BadRequest("При аутентификации произошла ошибка");
+      }
+
+      const savedTokens = await TokenService.save(tokens, user.id);
+
+      if (!savedTokens) {
+        throw new ApiError().BadRequest("При аутентификации произошла ошибка");
+      }
+
+      CookieService.set(res, tokens.refreshToken);
 
       return res.status(200).json({
-        message: "Successful authentication",
+        message: "Аутентификация прошла успешно",
         user: { ...user, ...tokens },
       });
     } catch (err) {
@@ -48,17 +43,32 @@ class AuthController {
 
   async registration(req, res, next) {
     try {
-      ErrorService.check(req);
+      checkValidateRequest(req);
 
-      const user = dto(await AuthService.registration(req.body));
-      const tokens = await TokenService.generateTokens(user);
+      const user = await AuthService.registration(req.body);
 
-      await TokenService.saveToken(user.id, tokens);
+      if (!user) {
+        throw new ApiError().BadRequest("При регистрации произошла ошибка");
+      }
 
-      res.cookie("refreshToken", tokens.refreshToken);
+      const tokens = TokenService.generate(user);
+
+      if (!tokens) {
+        await UserService.delete(user.email);
+        throw new ApiError().BadRequest("При регистрации произошла ошибка");
+      }
+
+      const savedTokens = await TokenService.save(tokens, user.id);
+
+      if (!savedTokens) {
+        await UserService.delete(user.email);
+        throw new ApiError().BadRequest("При регистрации произошла ошибка");
+      }
+
+      CookieService.set(res, tokens.refreshToken);
 
       return res.status(200).json({
-        message: "Successful registration",
+        message: "Регистрация прошла успешно",
         user: { ...user, ...tokens },
       });
     } catch (err) {
@@ -68,10 +78,10 @@ class AuthController {
 
   async logout(_, res, next) {
     try {
-      res.clearCookie();
+      CookieService.delete(res);
 
-      return res.status(200).json({
-        message: "User has successfully logged out",
+      res.status(200).json({
+        message: "Пользователь успешно вышел",
       });
     } catch (err) {
       next(err);
