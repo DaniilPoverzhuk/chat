@@ -18,7 +18,7 @@ class AuthController {
         throw new ApiError().BadRequest("При аутентификации произошла ошибка");
       }
 
-      const tokens = TokenService.generate(req.body);
+      const tokens = TokenService.generate(user);
 
       if (!tokens) {
         throw new ApiError().BadRequest("При аутентификации произошла ошибка");

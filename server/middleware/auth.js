@@ -2,7 +2,7 @@ const ApiError = require("../error/handler.js");
 const { isValidAccessToken } = require("../services/token.js");
 
 module.exports = (req, res, next) => {
-  const accessToken = req.headers.authorization?.split(" ")[1];
+  const accessToken = req.headers.authorization;
 
   if (!accessToken) {
     throw new ApiError().Unauthorized();

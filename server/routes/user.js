@@ -7,6 +7,6 @@ const authMiddleware = require("../middleware/auth.js");
 
 router.use(authMiddleware);
 
-router.get("/getAll", validation.getAll(), controller.getAll);
+router.post("/getAll", validation.getAll(), controller.getAll);
 
 module.exports = router;

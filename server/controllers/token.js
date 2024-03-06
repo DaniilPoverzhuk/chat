@@ -1,16 +1,20 @@
-const TokenService = require("../services/token.js");
 const ApiError = require("../error/handler.js");
+
+const CookieService = require("../services/cookie.js");
+const TokenService = require("../services/token.js");
 
 class TokenController {
   async update(req, res, next) {
     try {
       const refreshToken = TokenService.getRefreshTokenFromCookie(req);
 
+      console.log(refreshToken);
+
       if (!refreshToken || refreshToken === "null") {
         throw new ApiError().Unauthorized();
       }
 
-      const { exp, iat, ...user } =
+      const { iat, exp, ...user } =
         TokenService.isValidRefreshToken(refreshToken);
 
       if (!user) {
@@ -21,7 +25,7 @@ class TokenController {
 
       await TokenService.save(user.id, tokens);
 
-      res.cookie(process.env.COOKIE_REFRESH_TOKEN_KEY, tokens.refreshToken);
+      CookieService.set(res, tokens.refreshToken);
 
       return res.status(200).json({
         message: "Токен был успешно обновлен",
