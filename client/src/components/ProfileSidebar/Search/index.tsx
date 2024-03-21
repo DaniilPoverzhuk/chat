@@ -24,8 +24,8 @@ const Search: React.FC<Props> = ({ onChange }) => {
       </IconButton>
       <InputBase
         sx={{ marginLeft: "10px" }}
-        placeholder="Search friends..."
         onChange={(event) => onChange(event.target.value)}
+        placeholder="Search friends..."
       />
     </Paper>
   );
