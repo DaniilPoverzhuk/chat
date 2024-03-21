@@ -32,17 +32,12 @@ const ModalComponents: IModalComponent = {
 };
 
 const Sidebar: React.FC = () => {
-  const [search, setSearch] = useState<string>("");
   const { isVisible, showModal, closeModal } = useModal();
   const [currentTypeModal, setCurrentTypeModal] = useState<TypeModal | "">("");
   const ModalContent = useMemo(
     () => currentTypeModal && ModalComponents[currentTypeModal],
     [currentTypeModal]
   );
-
-  const setSearchHandler = debounce((value: string) => {
-    setSearch(value);
-  }, 300);
 
   const showModalHandler = (type: TypeModal) => {
     showModal();
@@ -62,9 +57,6 @@ const Sidebar: React.FC = () => {
         <ListItemButton onClick={() => showModalHandler("profile")}>
           <Author />
         </ListItemButton>
-        {/* <Box margin={"0 20px"}>
-          <Search onChange={setSearchHandler} />
-        </Box> */}
       </Box>
       <Grid container display={"grid"} gridTemplateColumns={"1fr 1fr"}>
         <Grid item>
@@ -80,7 +72,7 @@ const Sidebar: React.FC = () => {
           />
         </Grid>
       </Grid>
-      <ListRooms search={search} />
+      <ListRooms />
     </>
   );
 };
