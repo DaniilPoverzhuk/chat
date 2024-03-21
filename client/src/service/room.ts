@@ -1,6 +1,6 @@
 import instance from "@/axios";
 import { IDefaultResponse, IRoom } from "@/types";
-import { Axios, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 
 interface CreateProps {
   avatar?: string;
