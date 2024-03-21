@@ -3,7 +3,7 @@ import React, { useMemo, useState } from "react";
 import { Box, Grid, ListItemButton } from "@mui/material";
 
 import Author from "./Author";
-import ButtonAdd from "./ButtonAdd";
+import Button from "./Button";
 import AddFriend from "./ModalTypes/AddFriend";
 import AddCommunity from "./ModalTypes/AddCommunity";
 import Profile from "./ModalTypes/Profile";
@@ -57,13 +57,13 @@ const Sidebar: React.FC = () => {
       </Box>
       <Grid container display={"grid"} gridTemplateColumns={"1fr 1fr"}>
         <Grid item>
-          <ButtonAdd
-            label="Добавить группу"
+          <Button
+            label="Создать группу"
             onClick={() => showModalHandler("community")}
           />
         </Grid>
         <Grid item>
-          <ButtonAdd
+          <Button
             label="Добавить друга"
             onClick={() => showModalHandler("friend")}
           />

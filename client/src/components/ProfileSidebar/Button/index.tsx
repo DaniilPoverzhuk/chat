@@ -6,7 +6,7 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
   label: string;
 }
 
-const ButtonAdd: React.FC<Props> = memo(({ label, onClick }) => {
+const Button: React.FC<Props> = memo(({ label, onClick }) => {
   return (
     <ListItemButton onClick={onClick} sx={{ padding: "20px 0" }}>
       <Grid container display={"flex"} justifyContent={"center"} gap={1}>
@@ -21,4 +21,4 @@ const ButtonAdd: React.FC<Props> = memo(({ label, onClick }) => {
   );
 });
 
-export default ButtonAdd;
+export default Button;
