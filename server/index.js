@@ -26,6 +26,9 @@ const auth = require("./routes/auth.js");
 const upload = require("./routes/upload.js");
 const token = require("./routes/token.js");
 const users = require("./routes/user.js");
+const friends = require("./routes/friend.js");
+const rooms = require("./routes/room.js");
+const messages = require("./routes/message.js");
 
 const { connect: connectSocket } = require("./socket/index.js");
 
@@ -40,7 +43,10 @@ app.use("/auth", auth);
 app.use("/token", token);
 app.use("/users", users);
 app.use("/upload", upload);
+app.use("/friends", friends);
+app.use("/rooms", rooms);
+app.use("/messages", messages);
 
 app.use(errorMiddleware);
 
-server.listen(PORT, () => console.log("server is working"));
+server.listen(PORT);

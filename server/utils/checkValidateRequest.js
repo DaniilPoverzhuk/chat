@@ -6,7 +6,7 @@ module.exports = (req) => {
 
   if (!result.isEmpty()) {
     throw new ApiError().BadRequest(
-      "An error occurred during data validation",
+      "При валидации данных произошла ошибка",
       result.array()
     );
   }

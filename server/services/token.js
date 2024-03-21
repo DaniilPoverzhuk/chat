@@ -35,6 +35,7 @@ exports.save = async ({ refreshToken }, user_id) => {
 
     return newToken;
   } catch (err) {
+    err;
     return null;
   }
 };

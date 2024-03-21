@@ -1,14 +1,20 @@
-const users = require("../index.js");
+const { users } = require("../index.js");
 
 module.exports = (io, socket) => {
-  const getOnline = () => {
-    io.emit("user:get-online", users);
+  const updateOnlineStatus = () => {
+    io.emit(`user:get-online-status`, users);
   };
 
-  const add = (user) => {
-    users[user.id] = socket.id;
+  const connect = (userId) => {
+    users[userId] = socket.id;
+    updateOnlineStatus();
   };
 
-  socket.on("user:add", add);
-  socket.on("user:get-online", getOnline);
+  const disconnect = (userId) => {
+    delete users[userId];
+    updateOnlineStatus();
+  };
+
+  socket.on("user:connect", connect);
+  socket.on("user:disconnect", disconnect);
 };

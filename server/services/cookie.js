@@ -1,6 +1,6 @@
 exports.set = (res, refreshToken) => {
   res.cookie(process.env.COOKIE_REFRESH_TOKEN_KEY, refreshToken, {
-    maxAge: 3600 * 24,
+    maxAge: 60 * 60 * 24 * 30, // month
     httpOnly: true,
   });
 };

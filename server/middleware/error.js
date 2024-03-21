@@ -9,6 +9,6 @@ module.exports = (err, _, res, next) => {
   }
 
   return res.status(500).json({
-    message: "Unexpected error",
+    message: "Непредвиденная ошибка",
   });
 };

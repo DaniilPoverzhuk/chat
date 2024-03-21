@@ -1,6 +1,5 @@
 class UploadController {
   avatar(req, res, next) {
-    console.log(req.file);
     try {
       if (!req.file) {
         throw new ApiError().BadRequest(
@@ -8,7 +7,7 @@ class UploadController {
         );
       }
 
-      const src = `uploads/avatar/${req.file.originalname}`;
+      const src = `uploads/avatars/${req.file.originalname}`;
 
       return res.status(200).json({
         message: "Изображение было успешно загружено",

@@ -8,22 +8,34 @@ class TokenController {
     try {
       const refreshToken = TokenService.getRefreshTokenFromCookie(req);
 
-      console.log(refreshToken);
-
       if (!refreshToken || refreshToken === "null") {
         throw new ApiError().Unauthorized();
       }
 
-      const { iat, exp, ...user } =
+      const isValidRefreshToken =
         TokenService.isValidRefreshToken(refreshToken);
 
-      if (!user) {
+      if (!isValidRefreshToken) {
         throw new ApiError().Unauthorized();
       }
 
+      const { iat, exp, ...user } = isValidRefreshToken;
+
       const tokens = TokenService.generate(user);
 
-      await TokenService.save(user.id, tokens);
+      if (!tokens) {
+        throw new ApiError().BadRequest(
+          "При обновлении токена произошла ошибка"
+        );
+      }
+
+      const isSavedToken = await TokenService.save(tokens, user.id);
+
+      if (!isSavedToken) {
+        throw new ApiError().BadRequest(
+          "При обновлении токена произошла ошибка"
+        );
+      }
 
       CookieService.set(res, tokens.refreshToken);
 
@@ -35,6 +47,7 @@ class TokenController {
         },
       });
     } catch (err) {
+      err;
       next(err);
     }
   }
