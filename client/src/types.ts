@@ -1,23 +1,16 @@
 export interface ID {
-  id: number | null;
+  id: number;
 }
 
-export interface IUser extends ID {
-  username: string;
-  email: string;
-  password: string;
-  avatar: string;
+export interface ITimeStamps {
   createdAt: string;
   updatedAt: string;
-  refreshToken: string;
-  accessToken: string;
-  isOnline: boolean;
 }
 
 export interface IMessage extends ID {
   value: string;
-  senderId: number;
-  roomId: number;
+  sender_id: number;
+  room_id: number;
 }
 
 export interface ISocketUser {
@@ -31,4 +24,21 @@ export interface ISocketUsers {
 
 export interface IDefaultResponse {
   message: string;
+}
+
+export interface IUser extends ID, ITimeStamps {
+  username: string;
+  email: string;
+  password: string;
+  avatar: string;
+  refreshToken: string;
+  accessToken: string;
+  isOnline: boolean;
+}
+
+export interface IRoom extends ID {
+  name: string;
+  avatar: string;
+  users: number[];
+  isCommunity: boolean;
 }

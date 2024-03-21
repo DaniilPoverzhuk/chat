@@ -8,7 +8,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import styles from "./index.module.scss";
 
 interface Props {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   isVisible: boolean;
   onClose: () => void;
 }
@@ -18,30 +18,28 @@ const Modal: React.FC<Props> = ({ children, isVisible, onClose }) => {
   return (
     <Transition nodeRef={rootRef} in={isVisible} timeout={400} unmountOnExit>
       {(state) => (
-        <Grid
-          ref={rootRef}
-          className={clsx(styles.modal, styles[state])}
-          sx={{ position: "absolute", inset: "0" }}
-        >
+        <Grid ref={rootRef} sx={{ position: "absolute", inset: "0" }}>
           <Box
+            className={clsx(styles.modal, styles[state])}
             sx={{
               position: "absolute",
               inset: "0",
               backgroundColor: "rgba(0,0,0,0.5)",
+              zIndex: "100",
             }}
             onClick={onClose}
           />
           <Box
+            className={clsx(styles.modal, styles[state])}
             sx={{
               backgroundColor: "#fff",
               transform: "translate(-50%, -50%)",
-              width: "100%",
-              maxWidth: "450px",
             }}
             padding={2}
             position={"absolute"}
             left={"50%"}
             top={"50%"}
+            minWidth={"350px"}
             zIndex={100}
             borderRadius={1}
           >

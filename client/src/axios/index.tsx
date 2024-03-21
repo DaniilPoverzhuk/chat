@@ -10,13 +10,12 @@ const instance = axios.create({
 
 instance.interceptors.request.use((config) => {
   config.headers.Authorization = CustomLocalStorage.get("accessToken");
+
   return config;
 });
 
 instance.interceptors.response.use(
-  (request) => {
-    return request;
-  },
+  (request) => request,
   async (error) => {
     const originalRequest = error.config;
 
@@ -34,9 +33,7 @@ instance.interceptors.response.use(
         CustomLocalStorage.set<string>(user.accessToken, "accessToken");
 
         return instance.request(originalRequest);
-      } catch (error) {
-        console.log(error, "- ошибка interceptors");
-      }
+      } catch (error) {}
     }
 
     throw error;

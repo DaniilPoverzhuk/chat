@@ -1,12 +1,10 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { AxiosError } from "axios";
 
 import * as TokenService from "@/service/token";
 
-import { IError } from "@/axios/types";
-
 import CustomLocalStorage from "@/utils/CustomLocalStorage";
+import { ROUTES } from "@/routes";
 
 const privateRoutes = ["/"];
 
@@ -25,7 +23,7 @@ export default () => {
             "accessToken"
           );
         } catch (error) {
-          navigate("/login");
+          navigate(ROUTES.LOGIN);
         }
       })();
     }

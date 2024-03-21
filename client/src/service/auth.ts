@@ -1,5 +1,5 @@
 import instance from "@/axios";
-import { AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 
 import CustomLocalStorage from "@/utils/CustomLocalStorage";
 import { IUser } from "@/types";
@@ -47,6 +47,18 @@ export const registration = async (
 
   CustomLocalStorage.set<string>(response.data.user.accessToken, "accessToken");
   CustomLocalStorage.set<IUser>(response.data.user, "author");
+
+  return response;
+};
+
+interface LogoutResponse {
+  message: string;
+}
+
+export const logout = async (): Promise<AxiosResponse<LogoutResponse>> => {
+  const response = await axios("http://localhost:5001/auth/logout");
+
+  localStorage.clear();
 
   return response;
 };

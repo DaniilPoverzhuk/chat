@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -26,27 +26,25 @@ const Form: React.FC = () => {
   const { register, handleSubmit, reset } = useForm<TypeFormSchema>({
     resolver: zodResolver(formSchema),
   });
-  const { room, user } = useAppSelector((store) => store);
+  const room = useAppSelector((store) => store.room.current);
+  const author = useAppSelector((store) => store.user.author);
+
+  const getId = () => Date.now();
 
   const sendMessage: SubmitHandler<TypeFormSchema> = async (data) => {
     const message = {
+      id: getId(),
       value: data.message,
-      senderId: user.author!.id!,
-      roomId: room.data?.id!,
+      sender_id: author.id,
+      room_id: room.id,
     } as IMessage;
 
-    socket.emit("send-message", message);
+    socket.emit("message:send", message);
 
     await MessageService.save(message);
 
     reset();
   };
-
-  useEffect(() => {
-    if (socket.connected && socket) {
-      socket.on("get-message", (message) => console.log(message));
-    }
-  }, [socket]);
 
   return (
     <Box

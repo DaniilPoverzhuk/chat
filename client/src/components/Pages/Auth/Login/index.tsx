@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { AxiosError } from "axios";
 
 import { Container, Grid, Link, TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 import * as AuthService from "@/service/auth";
 
-import { IError } from "@/axios/types";
-
 import { setAuthor } from "@/lib/store/slices/user";
 import { useAppDispatch } from "@/lib/store";
 
-import "react-toastify/dist/ReactToastify.css";
-
 import { ROUTES } from "@/routes";
+import ToasterWrapper from "@/hoc/ToasterWrapper";
+import { TypeError } from "@/axios/types";
 
 const formSchema = z.object({
   email: z.string().email("Некорректный email"),
@@ -51,7 +48,7 @@ const Login: React.FC = () => {
         navigate(ROUTES.HOME);
       }, 2000);
     } catch (err) {
-      const errorObject = err as AxiosError<IError>;
+      const errorObject = err as TypeError;
 
       toast.error(errorObject.response?.data.message);
     }
@@ -62,44 +59,50 @@ const Login: React.FC = () => {
   }, []);
 
   return (
-    <Container maxWidth="xs">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container direction={"column"} alignItems={"flex-start"} gap={2}>
-          <TextField
-            {...register("email")}
-            label="Электронная почта"
-            variant="outlined"
-            size="small"
-            error={Boolean(errors.email!)}
-            helperText={Boolean(errors.email!) && errors.email?.message}
-            fullWidth
-          />
-          <TextField
-            {...register("password")}
-            label="Пароль"
-            variant="outlined"
-            size="small"
-            type="password"
-            error={Boolean(errors.password!)}
-            helperText={Boolean(errors.password!) && errors.password?.message}
-            fullWidth
-          />
-          <LoadingButton
-            loading={isLoading}
-            variant="contained"
-            onClick={handleSubmit(onSubmit)}
-            fullWidth
-            sx={{ maxWidth: "200px" }}
+    <ToasterWrapper>
+      <Container maxWidth="xs">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Grid
+            container
+            direction={"column"}
+            alignItems={"flex-start"}
+            gap={2}
           >
-            Войти
-          </LoadingButton>
-          <Link component={RouterLink} to={ROUTES.REGISTRATION}>
-            Зарегестрироваться
-          </Link>
-        </Grid>
-        <ToastContainer />
-      </form>
-    </Container>
+            <TextField
+              {...register("email")}
+              label="Электронная почта"
+              variant="outlined"
+              size="small"
+              error={Boolean(errors.email!)}
+              helperText={Boolean(errors.email!) && errors.email?.message}
+              fullWidth
+            />
+            <TextField
+              {...register("password")}
+              label="Пароль"
+              variant="outlined"
+              size="small"
+              type="password"
+              error={Boolean(errors.password!)}
+              helperText={Boolean(errors.password!) && errors.password?.message}
+              fullWidth
+            />
+            <LoadingButton
+              loading={isLoading}
+              variant="contained"
+              onClick={handleSubmit(onSubmit)}
+              fullWidth
+              sx={{ maxWidth: "200px" }}
+            >
+              Войти
+            </LoadingButton>
+            <Link component={RouterLink} to={ROUTES.REGISTRATION}>
+              Зарегестрироваться
+            </Link>
+          </Grid>
+        </form>
+      </Container>
+    </ToasterWrapper>
   );
 };
 

@@ -1,4 +1,4 @@
-import instance from "@/axios";
+import axios from "@/axios";
 
 import { IDefaultResponse, IMessage } from "@/types";
 import { AxiosResponse } from "axios";
@@ -6,11 +6,8 @@ import { AxiosResponse } from "axios";
 export const save = async (
   message: IMessage
 ): Promise<AxiosResponse<IMessage>> => {
-  const response = await instance<IMessage>({
-    method: "post",
-    url: "/message/save",
-    data: message,
-  });
+  const { id, ...data } = message;
+  const response = await axios.post<IMessage>("/messages/save", data);
 
   return response;
 };
@@ -19,38 +16,10 @@ interface GetAllResponse extends IDefaultResponse {
   messages: IMessage[];
 }
 
-export const getAll = async (
-  roomId: number
-): Promise<AxiosResponse<GetAllResponse>> => {
-  const response = await instance<GetAllResponse>({
-    method: "post",
-    url: "/message/getAll",
-    data: {
-      roomId,
-    },
+export const getAll = async (room_id: number): Promise<IMessage[]> => {
+  const response = await axios.post<GetAllResponse>("/messages/getAll", {
+    room_id,
   });
 
-  return response;
-};
-
-interface GetLastResponse {
-  message: string;
-  value: IMessage;
-}
-
-interface PropsGetLast {
-  senderId: number;
-  getterId: number;
-}
-
-export const getLast = async (
-  data: PropsGetLast
-): Promise<AxiosResponse<GetLastResponse>> => {
-  const response = await instance<GetLastResponse>({
-    method: "post",
-    url: "/message/getLast",
-    data,
-  });
-
-  return response;
+  return response.data.messages.reverse();
 };

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { AxiosError } from "axios";
+import axios from "axios";
 
 import { Container, Grid, Link, TextField } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
@@ -14,7 +14,7 @@ import * as AuthService from "@/service/auth";
 import { setAuthor } from "@/lib/store/slices/user";
 import { useAppDispatch } from "@/lib/store";
 
-import { IError } from "@/axios/types";
+import { TypeError } from "@/axios/types";
 
 import { ROUTES } from "@/routes";
 
@@ -26,6 +26,8 @@ import ModalContent from "./ModalContent";
 import AvatarButton from "./AvatarButton";
 
 import "react-toastify/dist/ReactToastify.css";
+import combineWithServerUrl from "@/utils/combineWithServerUrl";
+import ToasterWrapper from "@/hoc/ToasterWrapper";
 
 const formSchema = z
   .object({
@@ -33,6 +35,7 @@ const formSchema = z
     username: z.string().min(3, "Слишком короткое имя"),
     password: z.string().min(5, "Пароль должен состоять минимум из 5 символов"),
     confirm_password: z.string().min(5, "Введите пароль еще раз"),
+    avatar: z.string(),
   })
   .refine((data) => data.password === data.confirm_password, {
     path: ["confirm_password"],
@@ -43,11 +46,17 @@ type FormSchema = z.infer<typeof formSchema>;
 
 const DEFAULT_AVATAR = "/images/avatars/avatar-1.svg";
 
+interface ResponseUpload {
+  message: string;
+  src: string;
+}
+
 const Login: React.FC = () => {
   const {
     register,
     handleSubmit,
     setFocus,
+    setValue,
     formState: { errors },
   } = useForm<FormSchema>({ resolver: zodResolver(formSchema) });
   const navigate = useNavigate();
@@ -58,9 +67,9 @@ const Login: React.FC = () => {
 
   const onSubmit = async (formData: FormSchema) => {
     try {
-      const { data } = await AuthService.registration({ ...formData, avatar });
+      const { data } = await AuthService.registration(formData);
 
-      dispatch(setAuthor({ ...data.user, avatar, isOnline: true }));
+      dispatch(setAuthor({ ...data.user, isOnline: true }));
 
       setLoading(true);
       toast.success("Регистрация прошла успешно!");
@@ -69,26 +78,53 @@ const Login: React.FC = () => {
         navigate(ROUTES.HOME);
       }, 2000);
     } catch (err) {
-      const errorObject = err as AxiosError<IError>;
-
-      toast.error(errorObject.response?.data.message);
+      toast.error("При регистрации произошла ошибка");
     }
   };
 
-  const changeAvatar = (src: string) => {
+  const setAvatarByInputFile = async (file: File) => {
+    const URL = combineWithServerUrl("upload/avatar");
+    const formData = new FormData();
+
+    formData.append("avatar", file);
+
+    try {
+      const { data } = await axios.postForm<ResponseUpload>(URL, formData);
+      const src = combineWithServerUrl(data.src);
+
+      toast.success("Изображение успешно загружено !!!");
+
+      src;
+      setAvatar(src);
+      setValue("avatar", src);
+    } catch (err) {
+      err;
+
+      toast.error("Не удалось загрузить изображение :(");
+    }
+
+    closeModal();
+  };
+
+  const setAvatarByDefaultIcons = async (src: string) => {
     setAvatar(src);
+    setValue("avatar", src);
     closeModal();
   };
 
   useEffect(() => {
     setFocus("email");
+    setValue("avatar", avatar);
   }, []);
 
   return (
-    <>
+    <ToasterWrapper>
       <Container maxWidth="xs">
         <Modal isVisible={isVisible} onClose={closeModal}>
-          <ModalContent changeAvatar={changeAvatar} />
+          <ModalContent
+            setAvatarByDefaultIcons={setAvatarByDefaultIcons}
+            setAvatarByInputFile={setAvatarByInputFile}
+          />
         </Modal>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid
@@ -155,8 +191,7 @@ const Login: React.FC = () => {
           </Grid>
         </form>
       </Container>
-      <ToastContainer />
-    </>
+    </ToasterWrapper>
   );
 };
 

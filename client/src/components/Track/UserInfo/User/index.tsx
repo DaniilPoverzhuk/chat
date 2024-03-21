@@ -6,30 +6,32 @@ import styles from "./index.module.scss";
 import { Box, Grid, Typography } from "@mui/material";
 
 import { useAppSelector } from "@/lib/store";
+import useFriend from "@/hooks/useFriend";
 
 const User: React.FC = () => {
-  const { selectedUser, author } = useAppSelector((store) => store.user);
+  const room = useAppSelector((store) => store.room.current);
+  const { isOnline, friend } = useFriend(room.users);
 
-  if (!selectedUser || selectedUser.id === author!?.id) {
-    return <div />;
-  }
+  if (!friend) return null;
 
   return (
-    <Box display={"flex"} gap={1}>
+    <Box display={"flex"} alignItems={"center"} gap={1}>
       <Grid item display={"flex"} className={styles.image}>
         <img
-          src={selectedUser.avatar}
+          src={friend.avatar}
           style={{ width: "50px", height: "50px" }}
           alt="user-avatar"
         />
         <span
           className={clsx(styles.online, {
-            [styles.active]: selectedUser.isOnline,
+            [styles.active]: isOnline,
           })}
         />
       </Grid>
-      <Grid item marginTop={0.5}>
-        <Typography component={"p"}>{selectedUser.username}</Typography>
+      <Grid item>
+        <Typography component={"p"} lineHeight={1}>
+          {friend.username}
+        </Typography>
         <Typography component={"p"} fontSize={"12px"} color={"#797979"}>
           Last seen
         </Typography>

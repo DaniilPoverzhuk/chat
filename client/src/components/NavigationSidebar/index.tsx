@@ -1,30 +1,34 @@
 import React, { useState } from "react";
+import clsx from "clsx";
+import { useNavigate } from "react-router-dom";
+
 import styles from "./index.module.scss";
 
-import FolderIcon from "@mui/icons-material/Folder";
+import * as AuthService from "@/service/auth";
+
+import { ROUTES } from "@/routes";
+
 import MenuIcon from "@mui/icons-material/Menu";
 import ForumIcon from "@mui/icons-material/Forum";
-import {
-  Box,
-  Button,
-  Grid,
-  IconButton,
-  List,
-  ListItem,
-  Typography,
-} from "@mui/material";
-import clsx from "clsx";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { Box, IconButton, List, ListItem, Typography } from "@mui/material";
 
 const NavigationSidebar: React.FC = () => {
-  const [currentGroup, setCurrentGroup] = useState();
+  const navigate = useNavigate();
   const isActive = true;
+
+  const logoutHandler = async () => {
+    const response = await AuthService.logout();
+    response;
+    navigate(ROUTES.LOGIN);
+  };
 
   return (
     <Box borderRight={"1px solid #E0E0E0"} height={"100%"}>
-      <List sx={{ display: "flex", flexDirection: "column" }}>
+      <List sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
         <ListItem sx={{ justifyContent: "center" }}>
           <IconButton>
-            <MenuIcon fontSize="large" />
+            <MenuIcon fontSize="large" sx={{ color: "#bebebe" }} />
           </IconButton>
         </ListItem>
         <ListItem disablePadding sx={{ justifyContent: "center" }}>
@@ -62,6 +66,15 @@ const NavigationSidebar: React.FC = () => {
               </Typography>
             </Box>
           </button>
+        </ListItem>
+        <ListItem
+          disablePadding
+          sx={{ justifyContent: "center", marginTop: "auto" }}
+          onClick={logoutHandler}
+        >
+          <IconButton>
+            <LogoutIcon fontSize="large" sx={{ color: "#bebebe" }} />
+          </IconButton>
         </ListItem>
       </List>
     </Box>

@@ -3,11 +3,13 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 import user from "@/lib/store/slices/user";
 import room from "@/lib/store/slices/room";
+import notification from "@/lib/store/slices/notification";
 
 const store = configureStore({
   reducer: {
     user,
     room,
+    notification,
   },
 });
 

@@ -1,41 +1,69 @@
 import { AxiosResponse } from "axios";
-import axios from "@/axios";
+import instance from "@/axios";
 
 import { IDefaultResponse, IUser } from "@/types";
-import LocalStorage from "@/utils/CustomLocalStorage";
 
 interface IGetAllResponse {
   users: IUser[];
   message: string;
 }
 
-export const getAll = async (): Promise<AxiosResponse<IGetAllResponse>> => {
-  const author = LocalStorage.get<IUser>("author");
+interface GetProps {
+  author: IUser;
+  limit: number;
+}
 
+export const get = async ({
+  author,
+  limit = 0,
+}: GetProps): Promise<IUser[]> => {
   const data = { email: author?.email };
 
-  const response = await axios<IGetAllResponse>({
+  const response = await instance<IGetAllResponse>({
     method: "post",
-    url: "/users",
+    url: `/users/get?limit=${limit}`,
     data,
   });
+
+  return response.data.users;
+};
+
+interface GetByIdResponse {
+  user: IUser;
+  message: string;
+}
+
+export const getById = async (
+  id: number
+): Promise<AxiosResponse<GetByIdResponse>> => {
+  const response = await instance<GetByIdResponse>(`/users/get/${id}`);
 
   return response;
 };
 
-interface ChangeOnlineStatusResponse extends IDefaultResponse {
-  user: IUser;
+interface GetNonFriendUsersProps {
+  id: number;
+  limit: number;
+  page: number;
 }
 
-export const changeOnlineStatus = async (
-  status: boolean,
-  userId: number
-): Promise<AxiosResponse<ChangeOnlineStatusResponse>> => {
-  const response = await axios<ChangeOnlineStatusResponse>({
-    method: "post",
-    url: "/users/change-online-status",
-    data: { status, userId },
-  });
+interface GetNonFriendUsersResponse extends IDefaultResponse {
+  users: IUser[];
+}
 
-  return response;
+export const getNonFriendUsers = async ({
+  id,
+  limit,
+  page,
+}: GetNonFriendUsersProps): Promise<IUser[]> => {
+  const response = await instance.post<GetNonFriendUsersResponse>(
+    "/users/get-non-friends",
+    {
+      id,
+      limit,
+      page,
+    }
+  );
+
+  return response.data.users;
 };

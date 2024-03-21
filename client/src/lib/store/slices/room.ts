@@ -1,29 +1,30 @@
-import { ID } from "@/types";
+import { IRoom } from "@/types";
 import CustomLocalStorage from "@/utils/CustomLocalStorage";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-type TypeCommunity = number[];
-
-type TypeOneToOne = { senderId: number; getterId: number };
-
-export interface IRoom extends ID {
-  users: TypeCommunity | TypeOneToOne;
-}
-
 interface InitialState {
-  data: IRoom | null;
+  current: IRoom;
+  data: IRoom[];
 }
 
 const initialState: InitialState = {
-  data: CustomLocalStorage.get("currentRoom") ?? null,
+  current: CustomLocalStorage.get("currentRoom") ?? null,
+  data: CustomLocalStorage.get("Rooms") ?? [],
 };
 
 const RoomSlice = createSlice({
   name: "room",
   initialState,
   reducers: {
-    setData: (state: InitialState, action: PayloadAction<IRoom>) => {
+    setCurrentRoom: (state: InitialState, action: PayloadAction<IRoom>) => {
       CustomLocalStorage.set(action.payload, "currentRoom");
+      state.current = action.payload;
+    },
+    setRoom: (state: InitialState, action: PayloadAction<IRoom>) => {
+      console.log(`setRoom Redux ${action.payload}`);
+      state.data.unshift(action.payload);
+    },
+    setRooms: (state: InitialState, action: PayloadAction<IRoom[]>) => {
       state.data = action.payload;
     },
   },
@@ -31,4 +32,4 @@ const RoomSlice = createSlice({
 
 export default RoomSlice.reducer;
 
-export const { setData } = RoomSlice.actions;
+export const { setCurrentRoom, setRoom, setRooms } = RoomSlice.actions;

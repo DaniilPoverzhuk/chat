@@ -9,7 +9,7 @@ import ProfileSidebar from "@/components/ProfileSidebar";
 import NavigationSidebar from "@/components/NavigationSidebar";
 
 const Home: React.FC = () => {
-  const { selectedUser } = useAppSelector((store) => store.user);
+  const selectedRoom = useAppSelector((store) => store.room.current);
 
   return (
     <Container maxWidth="lg" sx={{ height: "100%" }}>
@@ -40,7 +40,7 @@ const Home: React.FC = () => {
             </Grid>
           </Grid>
           <Grid item xs={7} position={"relative"}>
-            {selectedUser ? (
+            {selectedRoom ? (
               <Track />
             ) : (
               <Typography

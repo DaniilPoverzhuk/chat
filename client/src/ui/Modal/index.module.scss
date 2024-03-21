@@ -7,6 +7,7 @@
 
   &.entered {
     opacity: 1;
+    z-index: 100;
   }
 
   &.exiting {
@@ -15,5 +16,6 @@
 
   &.exited {
     opacity: 0;
+    z-index: -100;
   }
 }
