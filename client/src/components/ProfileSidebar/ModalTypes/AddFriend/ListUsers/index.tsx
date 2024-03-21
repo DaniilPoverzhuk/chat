@@ -3,7 +3,6 @@ import { Typography } from "@mui/material";
 
 import List from "@/ui/List";
 import User from "../User";
-import { IUser } from "@/types";
 import useUsers from "../hooks/useUsers";
 
 const styles: CSSProperties = {
