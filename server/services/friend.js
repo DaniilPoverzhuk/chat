@@ -1,13 +1,14 @@
+const { Op } = require("sequelize");
 const { Friend, User, Friend_Requests } = require("../models/index.js");
 
 exports.getAll = async ({ id }) => {
   try {
-    const friendsId = await Friend.findAll({
+    const dataFriends = await Friend.findAll({
       where: { [Op.or]: [{ user_id: id }, { friend_id: id }] },
     });
     const friends = await Promise.all(
-      friendsId.map(({ friend_id }) =>
-        User.findOne({ where: { id: friend_id } })
+      dataFriends.map(({ user_id, friend_id }) =>
+        User.findOne({ where: { id: id === user_id ? friend_id : user_id } })
       )
     );
 
